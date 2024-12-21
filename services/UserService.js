@@ -61,4 +61,5 @@ const registerUser = async (fullName, email, username, password) => {
     }
 };
 
+
 module.exports = { registerUser };

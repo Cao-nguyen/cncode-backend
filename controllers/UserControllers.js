@@ -1,4 +1,6 @@
 const userServices = require('../services/UserService');
+const nodemailer = require('nodemailer');
+const randomCode = require('../helpers/randomCode')
 
 const registerUser = async (req, res) => {
     try {
@@ -17,7 +19,10 @@ const registerUser = async (req, res) => {
         return res.status(200).json({
             EM: data.EM,
             EC: data.EC,
-            DT: ""
+            DT: {
+                email: data.DT.email,
+                fullName: data.DT.fullName
+            }
         })
 
     } catch (err) {
@@ -30,4 +35,42 @@ const registerUser = async (req, res) => {
     }
 }
 
-module.exports = { registerUser };
+const xacthuc = async (req, res) => {
+    const code = randomCode();
+    const email = req.body.email;
+
+    const transporter = nodemailer.createTransport({
+        service: 'Gmail',
+        auth: {
+            user: 'cao343451@gmail.com',
+            pass: 'sarq rfvb tasz achk',
+        },
+    });
+
+    const mailOptions = {
+        from: 'cao343451@gmail.com',
+        to: email,
+        subject: 'CNcode | Mã xác thực khi đăng ký',
+        html: `
+            <div style="background-color: #ffffff; max-width: 400px; margin: 0 auto; padding: 20px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); font-family: Arial, sans-serif;">
+                <h1 style="text-align: center; color: #333333; font-size: 24px; margin-bottom: 20px;">CNCODE | MÃ XÁC THỰC EMAIL</h1>
+                <p style="color: #555555; font-size: 16px; line-height: 1.5; margin-bottom: 20px;">
+                    Vui lòng không chia sẻ mã xác thực này với bất kỳ ai. Mã có hiệu lực trong vòng 5 phút kể từ lúc bạn nhận được.
+                </p>
+                <p style="color: #333333; font-size: 18px; font-weight: bold; text-align: center; padding: 10px; border: 1px solid #e0e0e0; border-radius: 4px; background-color: #f9f9f9;">
+                    Mã xác thực của bạn là: <span style="color: #007BFF;">${code}</span>
+                </p>
+            </div>
+        `,
+    };
+
+    await transporter.sendMail(mailOptions);
+
+    return res.status(200).json({
+        EM: 'Đã gửi mã xác thực vào Email của bạn',
+        EC: 0,
+        DT: ''
+    })
+}
+
+module.exports = { registerUser, xacthuc };

@@ -1,17 +1,24 @@
-const express = require('express')
-require('dotenv').config()
-const db = require('./config/mongoDB')
+const express = require('express');
+require('dotenv').config();
+const db = require('./config/mongoDB');
+const cors = require('cors');
+const userRoutes = require('./Routes/UserRoutes');
 
-const app = express()
-const port = process.env.PORT
+const app = express();
+const port = process.env.PORT || 8080;
 
 // Kết nối database (mongoDB)
-db.connect()
+db.connect();
 
-app.get('/', (req, res) => {
-    res.send('Hello Cao Nguyên')
-})
+// Cho phép frontend từ localhost:3000
+app.use(cors());
+
+// Middleware để xử lý JSON requests
+app.use(express.json());
+
+// Routes
+userRoutes(app);
 
 app.listen(port, () => {
-    console.log(`App listening on port ${port}`)
-})
+    console.log(`App listening on port ${port}`);
+});

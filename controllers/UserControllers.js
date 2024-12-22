@@ -1,10 +1,12 @@
 const userServices = require('../services/UserService');
 const nodemailer = require('nodemailer');
 const randomCode = require('../helpers/randomCode')
+const Code = require('../models/CodeModel')
+require('dotenv').config()
 
 const registerUser = async (req, res) => {
     try {
-        const { fullName, email, username, password } = req.body;
+        const { fullName, email, username, password, code } = req.body;
 
         if (!fullName || !email || !username || !password) {
             return res.status(404).json({
@@ -14,7 +16,7 @@ const registerUser = async (req, res) => {
             })
         }
 
-        let data = await userServices.registerUser(fullName, email, username, password);
+        let data = await userServices.registerUser(fullName, email, username, password, code);
 
         return res.status(200).json({
             EM: data.EM,
@@ -42,13 +44,13 @@ const xacthuc = async (req, res) => {
     const transporter = nodemailer.createTransport({
         service: 'Gmail',
         auth: {
-            user: 'cao343451@gmail.com',
-            pass: 'sarq rfvb tasz achk',
+            user: process.env.EMAIL_NAME,
+            pass: process.env.EMAIL_PASSWORD_APP,
         },
     });
 
     const mailOptions = {
-        from: 'cao343451@gmail.com',
+        from: process.env.EMAIL_NAME,
         to: email,
         subject: 'CNcode | Mã xác thực khi đăng ký',
         html: `
@@ -66,6 +68,12 @@ const xacthuc = async (req, res) => {
 
     await transporter.sendMail(mailOptions);
 
+    const codeEmail = new Code({
+        code
+    });
+
+    await codeEmail.save();
+
     return res.status(200).json({
         EM: 'Đã gửi mã xác thực vào Email của bạn',
         EC: 0,
@@ -73,4 +81,50 @@ const xacthuc = async (req, res) => {
     })
 }
 
-module.exports = { registerUser, xacthuc };
+const quenmatkhau = async (req, res) => {
+    try {
+        const { fullName, email, username, password } = req.body
+
+        let data = await userServices.quenmatkhau(fullName, email, username, password);
+
+        return res.status(200).json({
+            EM: data.EM,
+            EC: data.EC,
+            DT: ''
+        })
+
+    } catch (err) {
+        console.error(err);
+        return res.status(500).json({
+            EM: data.EM,
+            EC: data.EC,
+            DT: ''
+        })
+    }
+
+}
+
+const login = async (req, res) => {
+    try {
+        const { fullName, username, password } = req.body
+
+        let data = await userServices.login(fullName, username, password);
+
+        return res.status(200).json({
+            EM: data.EM,
+            EC: data.EC,
+            DT: ''
+        })
+
+    } catch (err) {
+        console.error(err);
+        return res.status(500).json({
+            EM: data.EM,
+            EC: data.EC,
+            DT: ''
+        })
+    }
+
+}
+
+module.exports = { registerUser, xacthuc, quenmatkhau, login };

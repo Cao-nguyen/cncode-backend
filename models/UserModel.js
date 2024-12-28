@@ -12,6 +12,10 @@ const Users = new Schema({
         type: String,
         default: generate.generateRandomString(50)
     },
+    role: {
+        type: String,
+        default: 'user'
+    },
     status: {
         type: String,
         default: 'active'

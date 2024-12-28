@@ -1,116 +1,95 @@
+const bcrypt = require('bcryptjs')
 const SendMail = require('../helpers/nodemailer')
 const randomCode = require('../helpers/randomCode')
+const emailTemplate = require('../helpers/emailTemplate')
+const Code = require('../models/CodeModel')
+const User = require('../models/UserModel')
 
 const Xacthuc = async (req, res) => {
-    const email = req.body
-    const code = randomCode
+    const email = req.body.email
+    const code = randomCode()
     const subject = 'CNCODE | MÃ XÁC THỰC EMAIL'
-    const html = `
-    <html>
-        <body>
-            <div class="email">
-                <div class="content">
-                    <h1>CNcode | Mã xác thực Email</h1> 
-                    <div class="line"></div>
-                    <h3>
-                        Bên dưới là mã xác thực CNcode gửi đến bạn:
-                        <br/> - Bạn không được gửi mã xác thực này đến bất kì người nào khác.
-                        <br/> - Mã xác thực chỉ có thời hạn trong vòng 3 phút, nên bạn hãy cân nhắc.
-                    </h3>
-                    <div class="code">
-                        <h2 class="text">${code}</h2>
-                    </div>
-                </div>
-            </div>
+    const html = emailTemplate(code)
 
-            <style>
-                body{
-                margin:50px;
-                }
-            /* Container style */
-            .email {
-                margin: 0px auto;
-                padding: 20px;
-                border-radius: 10px;
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                max-width: 400px;
-                background-color: #fff;
-                box-shadow: rgba(0, 0, 0, 0.1) 0px 5px 15px;
-                font-family: 'Arial', sans-serif;
-            }
-            
-            /* Title styling */
-            h1 {
-                font-size: 28px;
-                text-align: center;
-                color: #333;
-                margin-bottom: 20px;
-            }
-            
-            /* Content paragraph styling */
-            h3 {
-                font-size: 16px;
-                color: #555;
-                font-weight: 500;
-                line-height: 1.5;
-                margin-bottom: 30px;
-            }
+    let data = await SendMail(email, subject, html);
 
-            /* Line under title */
-            .line {
-                width: 100%;
-                height: 3px;
-                background-color: #4CAF50;
-                margin-bottom: 20px;
-            }
-            
-            /* Code block style */
-            .code {
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                background-color: #f0f0f0;
-                width: 150px;
-                height: 50px;
-                border-radius: 8px;
-                margin: 0 auto;
-                box-shadow: rgba(0, 0, 0, 0.1) 0px 3px 6px;
-            }
-            
-            /* Code text style */
-            h2.text {
-                font-size: 24px;
-                color: #333;
-                font-weight: bold;
-                margin: 0;
-            }
-            </style>
-        </body>
-    </html>`
+    if (data.EC === 0) {
+        const codeNumbers = new Code({
+            code: code
+        })
+        await codeNumbers.save()
 
-    let send = await SendMail({
-        email: email,
-        subject: subject,
-        html: html
-    })
-
-    if (send) {
-        return {
-            EM: 'Đã gửi mã xác thực đến Email của bạn',
-            EC: 0,
-            DT: ''
-        }
+        return res.json({
+            EM: data.EM,
+            EC: data.EC,
+            DT: data.DT
+        })
     } else {
-        return {
-            EM: 'Không thể gửi mã xác thực đến Email của bạn',
-            EC: -1,
-            DT: ''
-        }
+        return res.json({
+            EM: data.EM,
+            EC: data.EC,
+            DT: data.DT
+        })
     }
 }
 
+const RegisterUser = async (req, res) => {
+    const { fullName, email, username, password, code } = req.body
+    const codeNumbers = await Code.findOne({ code });
+    const hashedPassword = await bcrypt.hash(password, 10)
+
+    if (!email || !fullName || !username || !password || !code) {
+        return res.json({
+            EM: 'Những thông tin bạn nhập là không đủ để đăng ký tài khoản',
+            EC: -1,
+            DT: ''
+        })
+    }
+
+    const isEmail = await User.findOne({ email });
+    if (isEmail) {
+        return res.json({
+            EM: 'Email này đã được đăng ký tài khoản trên hệ thống rồi',
+            EC: -1,
+            DT: ''
+        });
+    }
+
+    const isUsername = await User.findOne({ username });
+    if (isUsername) {
+        return res.json({
+            EM: 'Đã có người dùng lựa chọn tên này, bạn vui lòng chọn tên khác',
+            EC: -1,
+            DT: ''
+        })
+    }
+
+    if (codeNumbers.code !== code) {
+        return res.json({
+            EM: 'Mã xác thực bạn nhập là không chính xác',
+            EC: -1,
+            DT: ''
+        });
+    }
+
+    const user = new User({
+        email: email,
+        fullName: fullName,
+        username: username,
+        password: hashedPassword
+    })
+    await user.save()
+
+    return res.json({
+        EM: 'Đã đăng ký tài khoản thành công!',
+        EC: 0,
+        DT: {
+            fullName: user.fullName,
+            tokenUser: user.tokenUser
+        }
+    })
+}
+
 module.exports = {
-    Xacthuc
+    Xacthuc, RegisterUser
 }

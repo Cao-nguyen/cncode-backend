@@ -9,22 +9,28 @@ let transporter = nodemailer.createTransport({
     }
 });
 
-const sendMail = async ({ email, subject, html }) => {
-    let mailOptions = {
+const sendEmail = async (email, subject, htmlContent) => {
+    const mailOptions = {
         from: process.env.EMAIL_NAME,
         to: email,
         subject: subject,
-        html: html
+        html: htmlContent
     };
 
     try {
-        let info = await transporter.sendMail(mailOptions);
-        console.log('Email sent: ' + info.response);
-        return info;
+        await transporter.sendMail(mailOptions);
+        return {
+            EM: 'Đã gửi mã xác thực đến Email của bạn',
+            EC: 0,
+            DT: ''
+        }
     } catch (error) {
-        console.error('Lỗi khi gửi email:', error);
-        throw error;
+        return {
+            EM: 'Không thể gửi mã xác thực đến Email của bạn',
+            EC: -1,
+            DT: ''
+        }
     }
 };
 
-module.exports = sendMail;
+module.exports = sendEmail;

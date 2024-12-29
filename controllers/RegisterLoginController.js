@@ -85,11 +85,45 @@ const RegisterUser = async (req, res) => {
         EC: 0,
         DT: {
             fullName: user.fullName,
-            tokenUser: user.tokenUser
+            tokenUser: user.tokenUser,
+            role: user.role
         }
     })
 }
 
+const LoginUser = async (req, res) => {
+    const { fullName, username, password } = req.body;
+
+    const user = await User.findOne({ fullName, username });
+
+    if (!user) {
+        return res.json({
+            EM: "Họ tên hoặc tên đăng nhập không chính xác",
+            EC: -1,
+            DT: ''
+        });
+    }
+
+    const isPasswordValid = await bcrypt.compare(password, user.password);
+    if (!isPasswordValid) {
+        return res.json({
+            EM: "Mật khẩu không đúng",
+            EC: -1,
+            DT: ''
+        });
+    }
+
+    return res.json({
+        EM: "Đăng nhập thành công",
+        EC: 0,
+        DT: {
+            fullName: user.fullName,
+            tokenUser: user.tokenUser,
+            role: user.role
+        }
+    });
+};
+
 module.exports = {
-    Xacthuc, RegisterUser
+    Xacthuc, RegisterUser, LoginUser
 }

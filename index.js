@@ -21,6 +21,10 @@ app.use(express.json());
 userRoutes(app);
 adminRoutes(app)
 
+app.get("/", (req, res) => {
+  res.send("Hello, Vercel!");
+});
+
 app.listen(port, () => {
     console.log(`App listening on port ${port}`);
 });

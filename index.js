@@ -3,6 +3,7 @@ require('dotenv').config();
 const db = require('./config/mongoDB');
 const cors = require('cors');
 const userRoutes = require('./Routes/UserRoutes');
+const adminRoutes = require('./Routes/AdminRoutes')
 
 const app = express();
 const port = process.env.PORT || 8080;
@@ -18,6 +19,7 @@ app.use(express.json());
 
 // Routes
 userRoutes(app);
+adminRoutes(app)
 
 app.listen(port, () => {
     console.log(`App listening on port ${port}`);

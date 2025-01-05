@@ -12,7 +12,9 @@ const port = process.env.PORT || 8080;
 db.connect();
 
 // Cho phép frontend từ localhost:3000
-app.use(cors());
+app.use(cors({
+  origin: 'https://cncode.vercel.app'
+}));
 
 // Middleware để xử lý JSON requests
 app.use(express.json());
@@ -25,6 +27,5 @@ app.get("/", (req, res) => {
   res.send("Hello, Vercel!");
 });
 
-app.listen(port, () => {
-    console.log(`App listening on port ${port}`);
-});
+// Export app thay vì listen trực tiếp
+module.exports = app;

@@ -13,7 +13,10 @@ db.connect();
 
 // Cho phép frontend từ localhost:3000
 app.use(cors({
-  origin: 'https://cncode.vercel.app'
+  origin: [
+    'https://cncode.vercel.app',
+    'http://localhost:3000'
+  ]
 }));
 
 // Middleware để xử lý JSON requests

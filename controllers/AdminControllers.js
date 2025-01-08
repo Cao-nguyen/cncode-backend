@@ -2,19 +2,20 @@ const InforModel = require('../models/InforModel')
 
 const Infor = async (req, res) => {
     try {
-        const infor = req.body.Infor
+        const infor = req.body.Infor;
 
-        const inforDB = new InforModel({
-            infor: infor
-        })
+        const updatedInfor = await InforModel.findOneAndUpdate(
+            { infor: infor },
+            { new: true }
+        );
 
-        await inforDB.save()
-
-        return res.json({
-            EM: 'Đã cập nhật thông tin thành công!',
-            EC: 0,
-            DT: ''
-        })
+        if (updatedInfor) {
+            return res.json({
+                EM: 'Đã cập nhật thông tin thành công!',
+                EC: 0,
+                DT: ''
+            })
+        }
     } catch {
         return res.json({
             EM: 'Thông tin chưa được cập nhật',
@@ -26,7 +27,6 @@ const Infor = async (req, res) => {
 
 const getInfor = async (req, res) => {
     try {
-        // Lấy bản ghi mới nhất
         const getInforDB = await InforModel.findOne().sort({ _id: -1 });
 
         return res.json({

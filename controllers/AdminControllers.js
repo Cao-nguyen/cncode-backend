@@ -4,18 +4,15 @@ const Infor = async (req, res) => {
     try {
         const infor = req.body.Infor;
 
-        const updatedInfor = await InforModel.findOneAndUpdate(
-            { infor: infor },
-            { new: true }
-        );
+        await InforModel.updateOne({
+            infor: infor
+        })
 
-        if (updatedInfor) {
-            return res.json({
-                EM: 'Đã cập nhật thông tin thành công!',
-                EC: 0,
-                DT: ''
-            })
-        }
+        return res.json({
+            EM: 'Đã cập nhật thông tin thành công!',
+            EC: 0,
+            DT: ''
+        })
     } catch {
         return res.json({
             EM: 'Thông tin chưa được cập nhật',

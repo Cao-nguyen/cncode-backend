@@ -4,7 +4,7 @@ const AdminControllers = require('../controllers/AdminControllers')
 const router = express.Router();
 
 const adminRoutes = (app) => {
-    router.patch('/api/v1/infor', AdminControllers.Infor);
+    router.put('/api/v1/infor', AdminControllers.Infor);
     router.get('/api/v1/infor', AdminControllers.getInfor);
 
     app.use(router);

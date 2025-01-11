@@ -31,7 +31,7 @@ app.get("/", (req, res) => {
 });
 
 // Export app thay vì listen trực tiếp
-module.exports = app
-// app.listen(port, () => {
-//   console.log(`Server is running on http://localhost:${port}`);
-// });
+// module.exports = app
+app.listen(port, () => {
+  console.log(`Server is running on http://localhost:${port}`);
+});

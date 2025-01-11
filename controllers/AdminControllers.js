@@ -4,9 +4,9 @@ const Infor = async (req, res) => {
     try {
         const infor = req.body.Infor;
 
-        await InforModel.updateOne({
-            infor: infor
-        })
+        await InforModel.updateOne(
+            { infor: infor },
+        );
 
         return res.json({
             EM: 'Đã cập nhật thông tin thành công!',

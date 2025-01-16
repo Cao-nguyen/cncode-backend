@@ -16,6 +16,39 @@ const Users = new Schema({
         type: String,
         default: 'user'
     },
+    others: {
+        coins: { type: String, default: "100" },
+        water: { type: String, default: "100" },
+        meCourse: [
+            {
+                meCourseId: { type: String },
+                meCourseAt: { type: Date, default: Date.now }
+            }
+        ],
+        meBlog: [
+            {
+                meBlogId: { type: String },
+                meBlogAt: { type: Date, default: Date.now }
+            }
+        ],
+        likeBlog: [
+            {
+                likeBlogId: { type: String },
+                likeBlogAt: { type: Date, default: Date.now }
+            }
+        ],
+        items: [
+            {
+                itemName: { type: String },
+                dem: { type: String }
+            }
+        ],
+        huyhieu: [
+            {
+                image: { type: String }
+            }
+        ]
+    },
     status: {
         type: String,
         default: 'active'

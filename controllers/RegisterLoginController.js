@@ -78,7 +78,8 @@ const RegisterUser = async (req, res) => {
         username: username,
         password: hashedPassword
     })
-    await user.save()
+
+    await user.save();
 
     return res.json({
         EM: 'Đã đăng ký tài khoản thành công!',
@@ -86,7 +87,8 @@ const RegisterUser = async (req, res) => {
         DT: {
             fullName: user.fullName,
             tokenUser: user.tokenUser,
-            role: user.role
+            role: user.role,
+            id: user._id
         }
     })
 }
@@ -119,7 +121,8 @@ const LoginUser = async (req, res) => {
         DT: {
             fullName: user.fullName,
             tokenUser: user.tokenUser,
-            role: user.role
+            role: user.role,
+            id: user._id
         }
     });
 };

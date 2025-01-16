@@ -1,5 +1,6 @@
 const express = require('express');
 const RegisterLoginControllers = require('../controllers/RegisterLoginController')
+const KhuvuonControllers = require('../controllers/KhuvuonControllers')
 
 const router = express.Router();
 

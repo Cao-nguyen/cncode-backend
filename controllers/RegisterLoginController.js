@@ -127,6 +127,39 @@ const LoginUser = async (req, res) => {
     });
 };
 
+const Forgot = async (req, res) => {
+    const { email, code, password } = req.body
+    const codeNumbers = await Code.findOne({ code });
+    const hashedPassword = await bcrypt.hash(password, 10)
+
+    if (!email || !code || !password) {
+        return res.json({
+            EM: 'Những thông tin bạn nhập là không đủ để đăng ký tài khoản',
+            EC: -1,
+            DT: ''
+        })
+    }
+
+    if (codeNumbers.code !== code) {
+        return res.json({
+            EM: 'Mã xác thực bạn nhập là không chính xác',
+            EC: -1,
+            DT: ''
+        });
+    }
+
+    await User.updateOne(
+        { email },
+        { $set: { password: hashedPassword } }
+    )
+
+    return res.json({
+        EM: 'Đã thay đổi mật khẩu thành công!',
+        EC: 0,
+        DT: ""
+    })
+}
+
 module.exports = {
-    Xacthuc, RegisterUser, LoginUser
+    Xacthuc, RegisterUser, LoginUser, Forgot
 }

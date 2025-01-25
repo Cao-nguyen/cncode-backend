@@ -6,7 +6,7 @@ const showNews = async (req, res) => {
             deleted: false,
             show: true,
             isChecked: true
-        })
+        }).sort({ createdAt: -1 })
 
         return res.json({
             EC: 0,

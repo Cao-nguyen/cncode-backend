@@ -10,6 +10,11 @@ const adminRoutes = (app) => {
     router.patch('/api/v1/news/edit/:id', NewsControllers.editFunc)
     router.patch('/api/v1/news/delete/:id', NewsControllers.deleteFunc)
 
+    router.post('/api/v1/bins/news/delete', AdminControllers.deleteNewsFunc)
+    router.patch('/api/v1/bins/news/patch', AdminControllers.patchNewsFunc)
+    router.get('/api/v1/bins/news', AdminControllers.showNewsFunc)
+
+
     router.patch('/api/v1/infor', AdminControllers.Infor);
     router.get('/api/v1/infor', AdminControllers.getInfor);
 

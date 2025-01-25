@@ -1,10 +1,12 @@
 const express = require('express');
 const RegisterLoginControllers = require('../controllers/RegisterLoginController')
 const KhuvuonControllers = require('../controllers/KhuvuonControllers')
+const ClientControllers = require('../controllers/ClientControllers')
 
 const router = express.Router();
 
 const userRoutes = (app) => {
+    router.get('/api/v1/news/client/show', ClientControllers.showNews);
     router.post('/api/v1/xacthuc', RegisterLoginControllers.Xacthuc);
     router.post('/api/v1/dangky', RegisterLoginControllers.RegisterUser);
     router.post('/api/v1/dangnhap', RegisterLoginControllers.LoginUser);

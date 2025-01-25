@@ -32,7 +32,7 @@ const createFunc = async (req, res) => {
 
 const showFunc = async (req, res) => {
     try {
-        const news = await News.find({})
+        const news = await News.find({ deleted: false })
 
         return res.json({
             EC: 0,
@@ -76,4 +76,27 @@ const editFunc = async (req, res) => {
     }
 };
 
-module.exports = { createFunc, showFunc, editFunc };
+const deleteFunc = async (req, res) => {
+    try {
+        const { id } = req.body
+
+        await News.updateOne(
+            { _id: id },
+            { deleted: true }
+        )
+
+        return res.json({
+            EC: 0,
+            EM: "Đã xoá tin tức này thành công!",
+            DT: ""
+        })
+    } catch {
+        return res.json({
+            EC: -1,
+            EM: "Đã có lỗi xảy ra",
+            DT: ""
+        })
+    }
+}
+
+module.exports = { createFunc, showFunc, editFunc, deleteFunc };

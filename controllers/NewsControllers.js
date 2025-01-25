@@ -33,6 +33,7 @@ const createFunc = async (req, res) => {
 const showFunc = async (req, res) => {
     try {
         const news = await News.find({ deleted: false })
+            .sort({ createdAt: -1 })
 
         return res.json({
             EC: 0,

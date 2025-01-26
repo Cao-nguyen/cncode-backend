@@ -29,7 +29,6 @@ const likeNews = async (req, res) => {
         const news = await News.findOneAndUpdate(
             { slug: slug },
             {
-                $inc: { like: 1 },
                 $push: {
                     emotion: {
                         name: fullName,
@@ -46,12 +45,6 @@ const likeNews = async (req, res) => {
                 EM: "Thành công",
                 DT: news,
             });
-        } else {
-            return res.json({
-                EC: -1,
-                EM: "Không tìm thấy bài viết",
-                DT: "",
-            });
         }
     } catch (error) {
         return res.json({
@@ -62,5 +55,36 @@ const likeNews = async (req, res) => {
     }
 };
 
+const unLikeNews = async (req, res) => {
+    try {
+        const { fullName, slug } = req.body;
 
-module.exports = { showNews, likeNews }
+        const news = await News.findOneAndUpdate(
+            { slug: slug },
+            {
+                $pull: {
+                    emotion: { name: fullName },
+                },
+            },
+            { new: true }
+        );
+
+        if (news) {
+            return res.json({
+                EC: 0,
+                EM: "Unlike thành công",
+                DT: news,
+            });
+        }
+    } catch (error) {
+        return res.json({
+            EC: -1,
+            EM: "Có lỗi xảy ra",
+            DT: "",
+        });
+    }
+};
+
+
+
+module.exports = { unLikeNews, showNews, likeNews }

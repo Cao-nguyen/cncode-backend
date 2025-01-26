@@ -8,6 +8,8 @@ const router = express.Router();
 const userRoutes = (app) => {
     router.get('/api/v1/news/client/show', ClientControllers.showNews);
     router.patch('/api/v1/news/client/like', ClientControllers.likeNews);
+    router.post('/api/v1/news/client/unlike', ClientControllers.unLikeNews);
+
     router.post('/api/v1/xacthuc', RegisterLoginControllers.Xacthuc);
     router.post('/api/v1/dangky', RegisterLoginControllers.RegisterUser);
     router.post('/api/v1/dangnhap', RegisterLoginControllers.LoginUser);

@@ -11,7 +11,6 @@ const NewsSchema = new mongoose.Schema({
     show: { type: Boolean, default: true },
     description: { type: String },
     content: { type: String },
-    like: { type: Number, default: 0 },
     emotion: [
         {
             name: { type: String },

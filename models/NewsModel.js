@@ -12,6 +12,12 @@ const NewsSchema = new mongoose.Schema({
     description: { type: String },
     content: { type: String },
     like: { type: Number, default: 0 },
+    emotion: [
+        {
+            name: { type: String },
+            emotionAt: { type: Date, default: Date.now }
+        }
+    ],
     fullName: { type: String },
     deleted: { type: Boolean, default: false },
 }, {

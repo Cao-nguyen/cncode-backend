@@ -21,7 +21,7 @@ app.use(
     origin: [
       "https://cncode.vercel.app", // Frontend URL
       "http://localhost:3000", // Localhost khi phát triển
-      "https://cncode-backend-git-main-cao-nguyens-projects-a928ddee.vercel.app/"
+      "https://cncode-git-main-cao-nguyens-projects-a928ddee.vercel.app/"
     ],
   })
 );

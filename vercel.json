@@ -1,5 +1,11 @@
 {
   "version": 2,
+  "functions": {
+    "api/**": {
+      "memory": 1024,
+      "maxDuration": 10
+    }
+  },
   "builds": [
     {
       "src": "index.js",
@@ -8,13 +14,15 @@
   ],
   "routes": [
     {
-      "src": "/(.*)",
+      "src": "/api/(.*)",
       "dest": "index.js",
       "headers": {
+        "Cache-Control": "s-maxage=600, stale-while-revalidate",
         "Access-Control-Allow-Origin": "*",
         "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
         "Access-Control-Allow-Headers": "Content-Type, Authorization"
       }
     }
-  ]
+  ],
+  "regions": ["hkg1", "sin1", "iad1"]
 }

@@ -1,24 +1,27 @@
-const express = require('express');
-const AdminControllers = require('../controllers/AdminControllers')
-const NewsControllers = require('../controllers/NewsControllers')
+const express = require("express");
+const Bins = require("../controllers/BinsAdminControllers");
+const Infor = require("../controllers/InforAdminControllers");
+const News = require("../controllers/NewsAdminControllers");
 
 const router = express.Router();
 
 const adminRoutes = (app) => {
-    router.post('/api/v1/news/create', NewsControllers.createFunc)
-    router.get('/api/v1/news/show', NewsControllers.showFunc)
-    router.patch('/api/v1/news/edit/:id', NewsControllers.editFunc)
-    router.patch('/api/v1/news/delete/:id', NewsControllers.deleteFunc)
+  // Admin - Tin tức
+  router.get("/api/v1/admin/news/read", News.NewsRead);
+  router.post("/api/v1/admin/news/create", News.NewsCreate);
+  router.patch("/api/v1/admin/news/edit/:id", News.NewsEdit);
+  router.patch("/api/v1/admin/news/delete/:id", News.NewsDelete);
 
-    router.post('/api/v1/bins/news/delete', AdminControllers.deleteNewsFunc)
-    router.patch('/api/v1/bins/news/patch', AdminControllers.patchNewsFunc)
-    router.get('/api/v1/bins/news', AdminControllers.showNewsFunc)
+  // Admin - Thùng rác
+  router.post("/api/v1/bins/news/delete", Bins.BinsNewsDelete);
+  router.patch("/api/v1/bins/news/edit", Bins.BinsNewsEdit);
+  router.get("/api/v1/bins/news/read", Bins.BinsNewsRead);
 
+  // Admin - Giới thiệu
+  router.patch("/api/v1/admin/infor/edit", Infor.InforEdit);
+  router.get("/api/v1/admin/infor/read", Infor.InforRead);
 
-    router.patch('/api/v1/infor', AdminControllers.Infor);
-    router.get('/api/v1/infor', AdminControllers.getInfor);
-
-    app.use(router);
+  app.use(router);
 };
 
 module.exports = adminRoutes;

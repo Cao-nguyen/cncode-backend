@@ -16,13 +16,7 @@ const port = process.env.PORT || 8080;
 db.connect();
 
 // Cho phép frontend từ localhost:3000
-app.use(
-  cors({
-    origin: [
-      "*"
-    ],
-  })
-);
+app.use(cors({}));
 
 // Middleware để xử lý JSON requests
 app.use(express.json());
@@ -36,12 +30,7 @@ const server = http.createServer(app);
 
 // Khởi tạo socket.io với server
 const io = socketIo(server, {
-  cors: {
-    origin: [
-      "https://cncode.vercel.app", // Frontend URL
-      "http://localhost:3000", // Localhost khi phát triển
-    ],
-  },
+  cors: {},
 });
 
 // Kết nối với WebSocket

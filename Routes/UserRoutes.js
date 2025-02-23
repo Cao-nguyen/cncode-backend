@@ -1,19 +1,20 @@
 const express = require("express");
-const RegisterLoginControllers = require("../controllers/RegisterLoginController");
-const KhuvuonControllers = require("../controllers/KhuvuonControllers");
-const ClientControllers = require("../controllers/ClientControllers");
+const Login = require("../controllers/LoginClientControllers");
+const News = require("../controllers/NewsClientControllers");
 
 const router = express.Router();
 
 const userRoutes = (app) => {
-  router.get("/api/v1/news/client/show", ClientControllers.showNews);
-  router.patch("/api/v1/news/client/like", ClientControllers.likeNews);
-  router.post("/api/v1/news/client/unlike", ClientControllers.unLikeNews);
+  // Tin tức
+  router.get("/api/v1/news/client/read", News.NewsRead);
+  router.patch("/api/v1/news/client/news/like", News.NewsLikeCreate);
+  router.post("/api/v1/news/client/news/unlike", News.NewsUnlikeCreate);
 
-  router.post("/api/v1/xacthuc", RegisterLoginControllers.Xacthuc);
-  router.post("/api/v1/dangky", RegisterLoginControllers.RegisterUser);
-  router.post("/api/v1/dangnhap", RegisterLoginControllers.LoginUser);
-  router.patch("/api/v1/forgot", RegisterLoginControllers.Forgot);
+  // Đăng ký - Đăng nhập
+  router.post("/api/v1/client/xacthuc", Login.Xacthuc);
+  router.post("/api/v1/client/dangky", Login.RegisterUser);
+  router.post("/api/v1/client/dangnhap", Login.LoginUser);
+  router.patch("/api/v1/client/forgot", Login.Forgot);
 
   app.use(router);
 };

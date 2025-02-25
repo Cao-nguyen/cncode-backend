@@ -21,19 +21,24 @@ const ThemeRead = async (req, res) => {
 
 // [PATCH] EDIT
 const ThemeEdit = async (req, res) => {
+  const io = req.app.get("io");
   const { id } = req.body;
+
+  await Theme.updateMany({}, { active: false });
 
   const data = await Theme.findOneAndUpdate(
     { _id: id },
-    [{ $set: { active: { $not: "$active" } } }],
+    { active: true },
     { new: true }
   );
 
   if (data) {
+    io.emit("changeTheme", data);
+
     return res.json({
       EM: "Đã thay đổi giao diện thành công!",
       EC: 0,
-      DT: "",
+      DT: data,
     });
   } else {
     return res.json({

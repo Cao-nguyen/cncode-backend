@@ -3,10 +3,15 @@ const Bins = require("../controllers/BinsAdminControllers");
 const Infor = require("../controllers/InforAdminControllers");
 const News = require("../controllers/NewsAdminControllers");
 const Theme = require("../controllers/ThemeAdminControllers");
+const Ssl = require("../controllers/SslAdminControllers");
 
 const router = express.Router();
 
 const adminRoutes = (app) => {
+  // Admin - Chính sách bảo mật
+  router.get("/api/v1/admin/ssl/read", Ssl.SslRead);
+  router.patch("/api/v1/admin/ssl/edit", Ssl.SslEdit);
+
   // Admin - Giao diện
   router.get("/api/v1/admin/theme/read", Theme.ThemeRead);
   router.patch("/api/v1/admin/theme/edit", Theme.ThemeEdit);

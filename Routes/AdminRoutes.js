@@ -4,10 +4,20 @@ const Infor = require("../controllers/InforAdminControllers");
 const News = require("../controllers/NewsAdminControllers");
 const Theme = require("../controllers/ThemeAdminControllers");
 const Ssl = require("../controllers/SslAdminControllers");
+const Use = require("../controllers/UseAdminControllers");
+const Member = require("../controllers/MemberAdminControllers");
 
 const router = express.Router();
 
 const adminRoutes = (app) => {
+  // Admin - Chính sách thành viên
+  router.get("/api/v1/admin/member/read", Member.MemberRead);
+  router.patch("/api/v1/admin/member/edit", Member.MemberEdit);
+
+  // Admin - Điều khoản sử dụng
+  router.get("/api/v1/admin/use/read", Use.UseRead);
+  router.patch("/api/v1/admin/use/edit", Use.UseEdit);
+
   // Admin - Chính sách bảo mật
   router.get("/api/v1/admin/ssl/read", Ssl.SslRead);
   router.patch("/api/v1/admin/ssl/edit", Ssl.SslEdit);

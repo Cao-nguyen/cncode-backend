@@ -6,10 +6,15 @@ const Theme = require("../controllers/ThemeAdminControllers");
 const Ssl = require("../controllers/SslAdminControllers");
 const Use = require("../controllers/UseAdminControllers");
 const Member = require("../controllers/MemberAdminControllers");
+const Web = require("../controllers/WebAdminControllers");
 
 const router = express.Router();
 
 const adminRoutes = (app) => {
+  // Admin - Thông tin về website
+  router.patch("/api/v1/admin/web/read", Web.WebRead);
+  router.patch("/api/v1/admin/web/edit", Web.WebEdit);
+
   // Admin - Chính sách thành viên
   router.get("/api/v1/admin/member/read", Member.MemberRead);
   router.patch("/api/v1/admin/member/edit", Member.MemberEdit);

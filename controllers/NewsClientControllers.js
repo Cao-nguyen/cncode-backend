@@ -1,4 +1,5 @@
 const News = require("../models/NewsModel");
+const Comment = require("../models/CommentModel");
 
 const NewsRead = async (req, res) => {
   try {
@@ -85,4 +86,31 @@ const NewsUnlikeCreate = async (req, res) => {
   }
 };
 
-module.exports = { NewsRead, NewsLikeCreate, NewsUnlikeCreate };
+const CommentCreate = async (req, res) => {
+  const { fullName, chat } = req.body;
+
+  const data = new Comment({
+    comments: {
+      name: fullName,
+      comment: chat,
+    },
+  });
+
+  let respone = await data.save();
+
+  if (respone) {
+    return res.json({
+      EM: "Đã gửi bình luận thành công!",
+      EC: 0,
+      DT: "",
+    });
+  } else {
+    return res.json({
+      EM: "Đã gửi bình luận thất bại!",
+      EC: -1,
+      DT: "",
+    });
+  }
+};
+
+module.exports = { NewsRead, NewsLikeCreate, NewsUnlikeCreate, CommentCreate };

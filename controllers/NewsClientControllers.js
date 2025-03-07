@@ -87,18 +87,21 @@ const NewsUnlikeCreate = async (req, res) => {
 };
 
 const CommentCreate = async (req, res) => {
-  const { fullName, chat } = req.body;
+  const io = req.app.get("io");
+  const { fullName, chat, slug } = req.body;
 
   const data = new Comment({
     comments: {
       name: fullName,
       comment: chat,
     },
+    isPost: slug,
   });
 
   let respone = await data.save();
 
   if (respone) {
+    io.emit("pushComment", respone);
     return res.json({
       EM: "Đã gửi bình luận thành công!",
       EC: 0,
@@ -113,4 +116,32 @@ const CommentCreate = async (req, res) => {
   }
 };
 
-module.exports = { NewsRead, NewsLikeCreate, NewsUnlikeCreate, CommentCreate };
+const CommentRead = async (req, res) => {
+  const { slug } = req.params;
+
+  const data = await Comment.find({
+    isPost: slug,
+  });
+
+  if (data) {
+    return res.json({
+      EM: "Thành công!",
+      EC: 0,
+      DT: data,
+    });
+  } else {
+    return res.json({
+      EM: "Thất bại!",
+      EC: 0,
+      DT: "",
+    });
+  }
+};
+
+module.exports = {
+  NewsRead,
+  NewsLikeCreate,
+  NewsUnlikeCreate,
+  CommentCreate,
+  CommentRead,
+};

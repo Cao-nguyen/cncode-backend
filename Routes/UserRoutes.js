@@ -6,6 +6,7 @@ const router = express.Router();
 
 const userRoutes = (app) => {
   // Tin tức
+  router.get("/api/v1/admin/comment/read/:slug", News.CommentRead);
   router.post("/api/v1/admin/comment/create", News.CommentCreate);
   router.get("/api/v1/news/client/read", News.NewsRead);
   router.patch("/api/v1/news/client/news/like", News.NewsLikeCreate);

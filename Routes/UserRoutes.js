@@ -1,17 +1,22 @@
 const express = require("express");
 const Login = require("../controllers/LoginClientControllers");
 const News = require("../controllers/NewsClientControllers");
+const Profile = require("../controllers/ProfileClientControllers");
 
 const router = express.Router();
 
 const userRoutes = (app) => {
+  // Profile
+  router.get("/api/v1/client/profile/read/:username", Profile.ProfileRead);
+  router.get("/api/v1/client/post/read/:fullName", Profile.PostRead);
+
   // Tin tức
-  router.get("/api/v1/admin/comment/read/:slug", News.CommentRead);
-  router.patch("/api/v1/admin/comment/like", News.CommentLike);
-  router.patch("/api/v1/admin/comment/unlike", News.CommentUnlike);
-  router.post("/api/v1/admin/comment/delete", News.CommentDelete);
-  router.post("/api/v1/admin/comment/delete/reply", News.CommentDeleteReply);
-  router.post("/api/v1/admin/comment/create", News.CommentCreate);
+  router.get("/api/v1/client/comment/read/:slug", News.CommentRead);
+  router.patch("/api/v1/client/comment/like", News.CommentLike);
+  router.patch("/api/v1/client/comment/unlike", News.CommentUnlike);
+  router.post("/api/v1/client/comment/delete", News.CommentDelete);
+  router.post("/api/v1/client/comment/delete/reply", News.CommentDeleteReply);
+  router.post("/api/v1/client/comment/create", News.CommentCreate);
   router.get("/api/v1/news/client/read", News.NewsRead);
   router.patch("/api/v1/news/client/news/like", News.NewsLikeCreate);
   router.post("/api/v1/news/client/news/unlike", News.NewsUnlikeCreate);

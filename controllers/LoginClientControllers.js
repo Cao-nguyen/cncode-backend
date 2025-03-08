@@ -4,6 +4,10 @@ const randomCode = require("../helpers/randomCode");
 const emailTemplate = require("../helpers/emailTemplate");
 const Code = require("../models/CodeModel");
 const User = require("../models/UserModel");
+const Item = require("../models/itemModel");
+const Huyhieu = require("../models/huyhieuModel");
+const Follow = require("../models/followModel");
+const Course = require("../models/courseModel");
 
 const Xacthuc = async (req, res) => {
   const email = req.body.email;
@@ -72,11 +76,32 @@ const RegisterUser = async (req, res) => {
     });
   }
 
+  // Tạo bản ghi trống cho Role, Item, Huyhieu, Follow, Course
+  const newItem = new Item({});
+  const newHuyhieu = new Huyhieu({});
+  const newFollow = new Follow({});
+  const newCourse = new Course({});
+
+  await Promise.all([
+    newItem.save(),
+    newHuyhieu.save(),
+    newFollow.save(),
+    newCourse.save(),
+  ]);
+
+  // Tạo User mới và lưu ID của các bản ghi vào user
   const user = new User({
     email: email,
     fullName: fullName,
     username: username,
     password: hashedPassword,
+    coins: "0",
+    avatar:
+      "https://res.cloudinary.com/dckuqnehz/image/upload/v1740879702/uploads/img/18-01-2025/g354ky1ob557wmdz6sca",
+    itemId: newItem._id,
+    huyhieuId: newHuyhieu._id,
+    followId: newFollow._id,
+    courseId: newCourse._id,
   });
 
   await user.save();
@@ -87,6 +112,7 @@ const RegisterUser = async (req, res) => {
     DT: {
       fullName: user.fullName,
       tokenUser: user.tokenUser,
+      username: user.username,
       role: user.role,
       id: user._id,
     },
@@ -121,6 +147,7 @@ const LoginUser = async (req, res) => {
     DT: {
       fullName: user.fullName,
       tokenUser: user.tokenUser,
+      username: user.username,
       role: user.role,
       id: user._id,
     },

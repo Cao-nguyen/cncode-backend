@@ -1,5 +1,6 @@
 const News = require("../models/NewsModel");
 const Comment = require("../models/CommentModel");
+const { report } = require("..");
 
 const NewsRead = async (req, res) => {
   try {
@@ -95,6 +96,8 @@ const CommentCreate = async (req, res) => {
       comments: {
         name: fullName,
         comment: chat,
+        report: 0,
+        like: [],
         reply: [],
       },
       isPost: slug,
@@ -126,6 +129,7 @@ const CommentCreate = async (req, res) => {
           "comments.reply": {
             name: fullName,
             comment: chat,
+            report: 0,
           },
         },
       },
@@ -172,10 +176,187 @@ const CommentRead = async (req, res) => {
   }
 };
 
+const CommentDelete = async (req, res) => {
+  const io = req.app.get("io");
+
+  const { id } = req.body;
+
+  const data = await Comment.findOneAndDelete({ _id: id });
+
+  if (data) {
+    io.emit("chatDelete");
+    return res.json({
+      EM: "Xoá bình luận thành công",
+      EC: 0,
+      DT: "",
+    });
+  } else {
+    return res.json({
+      EM: "Có lỗi xảy ra",
+      EC: -1,
+      DT: "",
+    });
+  }
+};
+
+const CommentDeleteReply = async (req, res) => {
+  const io = req.app.get("io");
+  const { idMain, id } = req.body;
+
+  const data = await Comment.findOneAndUpdate(
+    { _id: idMain },
+    {
+      $pull: {
+        "comments.reply": {
+          _id: id,
+        },
+      },
+    },
+    { new: true }
+  );
+
+  if (data) {
+    io.emit("chatDeleteReply");
+    return res.json({
+      EM: "Xoá bình luận thành công",
+      EC: 0,
+      DT: "",
+    });
+  } else {
+    return res.json({
+      EM: "Không tìm thấy bình luận chính",
+      EC: -1,
+      DT: "",
+    });
+  }
+};
+
+const CommentLike = async (req, res) => {
+  const io = req.app.get("io");
+  const { idMain, id, fullName } = req.body;
+
+  if (!id) {
+    const dataLike = await Comment.findOneAndUpdate(
+      { _id: idMain },
+      {
+        $push: {
+          "comments.like": {
+            nameLike: fullName,
+          },
+        },
+      },
+      { new: true }
+    );
+
+    if (dataLike) {
+      io.emit("like");
+      return res.json({
+        EM: "Thành công!",
+        EC: 0,
+        DT: "",
+      });
+    } else {
+      return res.json({
+        EM: "Thất bại!",
+        EC: -1,
+        DT: "",
+      });
+    }
+  } else {
+    const dataLike = await Comment.findOneAndUpdate(
+      { _id: idMain, "comments.reply._id": id },
+      {
+        $push: {
+          "comments.reply.$.like": { nameLike: fullName },
+        },
+      },
+      { new: true }
+    );
+
+    if (dataLike) {
+      io.emit("like");
+      return res.json({
+        EM: "Thành công!",
+        EC: 0,
+        DT: "",
+      });
+    } else {
+      return res.json({
+        EM: "Thất bại!",
+        EC: -1,
+        DT: "",
+      });
+    }
+  }
+};
+
+const CommentUnlike = async (req, res) => {
+  const io = req.app.get("io");
+  const { idMain, id, fullName } = req.body;
+
+  if (!id) {
+    const dataLike = await Comment.findOneAndUpdate(
+      { _id: idMain },
+      {
+        $pull: {
+          "comments.like": {
+            nameLike: fullName,
+          },
+        },
+      },
+      { new: true }
+    );
+
+    if (dataLike) {
+      io.emit("unlike");
+      return res.json({
+        EM: "Thành công!",
+        EC: 0,
+        DT: "",
+      });
+    } else {
+      return res.json({
+        EM: "Thất bại!",
+        EC: -1,
+        DT: "",
+      });
+    }
+  } else {
+    const dataLike = await Comment.findOneAndUpdate(
+      { _id: idMain, "comments.reply._id": id },
+      {
+        $pull: {
+          "comments.reply.$.like": { nameLike: fullName },
+        },
+      },
+      { new: true }
+    );
+
+    if (dataLike) {
+      io.emit("unlike");
+      return res.json({
+        EM: "Thành công!",
+        EC: 0,
+        DT: "",
+      });
+    } else {
+      return res.json({
+        EM: "Thất bại!",
+        EC: -1,
+        DT: "",
+      });
+    }
+  }
+};
+
 module.exports = {
   NewsRead,
   NewsLikeCreate,
   NewsUnlikeCreate,
   CommentCreate,
   CommentRead,
+  CommentDelete,
+  CommentDeleteReply,
+  CommentLike,
+  CommentUnlike,
 };

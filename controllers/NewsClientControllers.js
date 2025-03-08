@@ -88,31 +88,65 @@ const NewsUnlikeCreate = async (req, res) => {
 
 const CommentCreate = async (req, res) => {
   const io = req.app.get("io");
-  const { fullName, chat, slug } = req.body;
+  const { fullName, chat, slug, tagName, idChat } = req.body;
 
-  const data = new Comment({
-    comments: {
-      name: fullName,
-      comment: chat,
-    },
-    isPost: slug,
-  });
-
-  let respone = await data.save();
-
-  if (respone) {
-    io.emit("pushComment", respone);
-    return res.json({
-      EM: "Đã gửi bình luận thành công!",
-      EC: 0,
-      DT: "",
+  if (tagName === null) {
+    const data = new Comment({
+      comments: {
+        name: fullName,
+        comment: chat,
+        reply: [],
+      },
+      isPost: slug,
     });
+
+    let response = await data.save();
+
+    if (response) {
+      const newComment = await Comment.findById(response._id);
+      io.emit("pushComment", newComment);
+
+      return res.json({
+        EM: "Đã gửi bình luận thành công!",
+        EC: 0,
+        DT: newComment,
+      });
+    } else {
+      return res.json({
+        EM: "Đã gửi bình luận thất bại!",
+        EC: -1,
+        DT: "",
+      });
+    }
   } else {
-    return res.json({
-      EM: "Đã gửi bình luận thất bại!",
-      EC: -1,
-      DT: "",
-    });
+    const data = await Comment.findOneAndUpdate(
+      { _id: idChat },
+      {
+        $push: {
+          "comments.reply": {
+            name: fullName,
+            comment: chat,
+          },
+        },
+      },
+      { new: true }
+    );
+
+    if (data) {
+      io.emit("pushCommentReply");
+
+      return res.json({
+        EM: "Đã gửi bình luận thành công!",
+        EC: 0,
+        DT: data,
+      });
+    } else {
+      return res.json({
+        EM: "Đã gửi bình luận thất bại!",
+        EC: -1,
+        DT: "",
+      });
+    }
   }
 };
 
@@ -121,7 +155,7 @@ const CommentRead = async (req, res) => {
 
   const data = await Comment.find({
     isPost: slug,
-  });
+  }).sort({ "comments.time": -1 });
 
   if (data) {
     return res.json({

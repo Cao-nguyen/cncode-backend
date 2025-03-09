@@ -1,38 +1,39 @@
 const mongoose = require("mongoose");
 
-const commentShema = new mongoose.Schema({
-  isPost: {
-    type: String,
-  },
-  comments: {
-    name: { type: String },
-    comment: { type: String },
-    time: {
-      type: Date,
-      default: Date.now(),
+const commentSchema = new mongoose.Schema(
+  {
+    postId: { type: mongoose.Schema.Types.ObjectId },
+    postType: { type: String, enum: ["blog", "news"] },
+    userId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "users",
     },
-    like: [
+    comment: { type: String },
+    likes: [
       {
-        nameLike: { type: String },
-        timeLink: { type: Date, default: Date.now() },
+        userId: { type: mongoose.Schema.Types.ObjectId, ref: "users" },
+        likedAt: { type: Date, default: Date.now },
       },
     ],
-    reply: [
+    replies: [
       {
-        name: { type: String },
+        userId: { type: mongoose.Schema.Types.ObjectId, ref: "users" },
         comment: { type: String },
-        time: { type: Date, default: Date.now() },
-        like: [
+        likes: [
           {
-            nameLike: { type: String },
-            timeLink: { type: Date, default: Date.now() },
+            userId: { type: mongoose.Schema.Types.ObjectId, ref: "users" },
+            likedAt: { type: Date, default: Date.now },
           },
         ],
+        createdAt: { type: Date, default: Date.now },
       },
     ],
   },
-});
+  {
+    timestamps: true,
+  }
+);
 
-const comment = mongoose.model("comment", commentShema);
+const Comment = mongoose.model("comment", commentSchema);
 
-module.exports = comment;
+module.exports = Comment;

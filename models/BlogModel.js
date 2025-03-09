@@ -3,11 +3,8 @@ const slugify = require("slugify");
 
 const BlogSchema = new mongoose.Schema(
   {
-    title: { type: String, required: true },
-    slug: {
-      type: String,
-      unique: true,
-    },
+    title: { type: String },
+    slug: { type: String, unique: true },
     isChecked: { type: Boolean, default: false },
     show: { type: Boolean, default: false },
     img: { type: String },
@@ -15,21 +12,24 @@ const BlogSchema = new mongoose.Schema(
     content: { type: String },
     emotion: [
       {
+        userId: { type: mongoose.Schema.Types.ObjectId, ref: "users" },
         name: { type: String },
         emotionAt: { type: Date, default: Date.now },
       },
     ],
-    active: { type: Boolean },
-    fullName: { type: String },
-    By: { type: String },
+    active: { type: Boolean, default: true },
     deleted: { type: Boolean, default: false },
+    author: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "users",
+    },
   },
   {
     timestamps: true,
   }
 );
 
-BlogSchema.pre("save", async function (next) {
+BlogSchema.pre("save", function (next) {
   if (this.isModified("title")) {
     const date = new Date();
     const dateString = `${date.getDate()}-${

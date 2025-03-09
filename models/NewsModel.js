@@ -3,23 +3,22 @@ const slugify = require("slugify");
 
 const NewsSchema = new mongoose.Schema(
   {
-    title: { type: String, required: true },
-    slug: {
-      type: String,
-      unique: true,
-    },
+    title: { type: String, trim: true },
+    slug: { type: String, unique: true },
+    category: { type: String, default: "General" }, // Phân loại tin tức
     isChecked: { type: Boolean, default: false },
     show: { type: Boolean, default: true },
     description: { type: String },
     content: { type: String },
     emotion: [
       {
+        _id: false,
         name: { type: String },
         emotionAt: { type: Date, default: Date.now },
       },
     ],
     fullName: { type: String },
-    by: { type: String },
+    authorId: { type: mongoose.Schema.Types.ObjectId, ref: "users" }, // Người đăng tin
     deleted: { type: Boolean, default: false },
   },
   {
@@ -27,16 +26,25 @@ const NewsSchema = new mongoose.Schema(
   }
 );
 
+// Middleware tạo slug trước khi lưu
 NewsSchema.pre("save", async function (next) {
   if (this.isModified("title")) {
-    const date = new Date();
-    const dateString = `${date.getDate()}-${
-      date.getMonth() + 1
-    }-${date.getFullYear()}`;
-    this.slug = slugify(`${this.title} ${dateString}`, {
-      lower: true,
-      strict: true,
-    });
+    let newSlug = slugify(this.title, { lower: true, strict: true });
+
+    // Đảm bảo slug là duy nhất
+    let existingNews = await this.constructor.findOne({ slug: newSlug });
+    if (existingNews) {
+      const date = new Date();
+      const dateString = `${date.getDate()}-${
+        date.getMonth() + 1
+      }-${date.getFullYear()}`;
+      newSlug = slugify(`${this.title} ${dateString}`, {
+        lower: true,
+        strict: true,
+      });
+    }
+
+    this.slug = newSlug;
   }
   next();
 });

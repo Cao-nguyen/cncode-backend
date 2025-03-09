@@ -10,123 +10,137 @@ const Follow = require("../models/followModel");
 const Course = require("../models/courseModel");
 
 const Xacthuc = async (req, res) => {
-  const email = req.body.email;
+  const { email } = req.body;
+
+  if (!email) {
+    return res.json({
+      EM: "Vui lòng nhập email",
+      EC: -1,
+      DT: "",
+    });
+  }
+
   const code = randomCode();
   const subject = "CNCODE | MÃ XÁC THỰC EMAIL";
   const html = emailTemplate(code);
-
   let data = await SendMail(email, subject, html);
 
   if (data.EC === 0) {
-    const codeNumbers = new Code({
-      code: code,
-    });
-    await codeNumbers.save();
-
+    await Code.findOneAndUpdate(
+      { email },
+      { code, createdAt: Date.now() },
+      { upsert: true }
+    );
     return res.json({
-      EM: data.EM,
-      EC: data.EC,
-      DT: data.DT,
-    });
-  } else {
-    return res.json({
-      EM: data.EM,
-      EC: data.EC,
-      DT: data.DT,
+      EM: "Mã xác thực đã được gửi",
+      EC: 0,
+      DT: "",
     });
   }
+  return res.json({
+    EM: "Gửi mã thất bại",
+    EC: -1,
+    DT: "",
+  });
 };
 
 const RegisterUser = async (req, res) => {
-  const { fullName, email, username, password, code } = req.body;
-  const codeNumbers = await Code.findOne({ code });
-  const hashedPassword = await bcrypt.hash(password, 10);
+  try {
+    const { fullName, email, username, password, code } = req.body;
 
-  if (!email || !fullName || !username || !password || !code) {
-    return res.json({
-      EM: "Những thông tin bạn nhập là không đủ để đăng ký tài khoản",
-      EC: -1,
-      DT: "",
+    if (!email || !fullName || !username || !password || !code) {
+      return res.json({
+        EM: "Vui lòng nhập đầy đủ thông tin",
+        EC: -1,
+        DT: "",
+      });
+    }
+
+    const isEmail = await User.findOne({ email });
+    if (isEmail)
+      return res.json({
+        EM: "Email đã tồn tại",
+        EC: -1,
+        DT: "",
+      });
+
+    const isUsername = await User.findOne({ username });
+    if (isUsername)
+      return res.json({
+        EM: "Username đã tồn tại",
+        EC: -1,
+        DT: "",
+      });
+
+    // Mã xác thực có đúng không?
+    const codeNumbers = await Code.findOne({ code });
+    if (!codeNumbers) {
+      return res.json({
+        EM: "Mã xác thực không chính xác",
+        EC: -1,
+        DT: "",
+      });
+    }
+
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    const user = new User({
+      email,
+      fullName,
+      username,
+      password: hashedPassword,
+      coins: "0",
+      avatar:
+        "https://res.cloudinary.com/dckuqnehz/image/upload/v1740879702/uploads/img/18-01-2025/g354ky1ob557wmdz6sca",
     });
-  }
 
-  const isEmail = await User.findOne({ email });
-  if (isEmail) {
+    await user.save();
+
+    const [newItem, newHuyhieu, newCourse, newFollow] = await Promise.all([
+      new Item({ userId: user._id }).save(),
+      new Huyhieu({ userId: user._id }).save(),
+      new Course({ userId: user._id }).save(),
+      new Follow({ followerId: user._id, followingId: user._id }).save(),
+    ]);
+
+    user.itemId = newItem._id;
+    user.huyhieuId = newHuyhieu._id;
+    user.followId = newFollow._id;
+    user.courseId = newCourse._id;
+    await user.save();
+
     return res.json({
-      EM: "Email này đã được đăng ký tài khoản trên hệ thống rồi",
-      EC: -1,
-      DT: "",
+      EM: "Đăng ký thành công!",
+      EC: 0,
+      DT: {
+        fullName: user.fullName,
+        username: user.username,
+        role: user.role,
+        id: user._id,
+      },
     });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ EM: "Lỗi server", EC: -2, DT: "" });
   }
-
-  const isUsername = await User.findOne({ username });
-  if (isUsername) {
-    return res.json({
-      EM: "Đã có người dùng lựa chọn tên này, bạn vui lòng chọn tên khác",
-      EC: -1,
-      DT: "",
-    });
-  }
-
-  if (codeNumbers.code !== code) {
-    return res.json({
-      EM: "Mã xác thực bạn nhập là không chính xác",
-      EC: -1,
-      DT: "",
-    });
-  }
-
-  // Tạo bản ghi trống cho Role, Item, Huyhieu, Follow, Course
-  const newItem = new Item({});
-  const newHuyhieu = new Huyhieu({});
-  const newFollow = new Follow({});
-  const newCourse = new Course({});
-
-  await Promise.all([
-    newItem.save(),
-    newHuyhieu.save(),
-    newFollow.save(),
-    newCourse.save(),
-  ]);
-
-  // Tạo User mới và lưu ID của các bản ghi vào user
-  const user = new User({
-    email: email,
-    fullName: fullName,
-    username: username,
-    password: hashedPassword,
-    coins: "0",
-    avatar:
-      "https://res.cloudinary.com/dckuqnehz/image/upload/v1740879702/uploads/img/18-01-2025/g354ky1ob557wmdz6sca",
-    itemId: newItem._id,
-    huyhieuId: newHuyhieu._id,
-    followId: newFollow._id,
-    courseId: newCourse._id,
-  });
-
-  await user.save();
-
-  return res.json({
-    EM: "Đã đăng ký tài khoản thành công!",
-    EC: 0,
-    DT: {
-      fullName: user.fullName,
-      tokenUser: user.tokenUser,
-      username: user.username,
-      role: user.role,
-      id: user._id,
-    },
-  });
 };
 
 const LoginUser = async (req, res) => {
   const { fullName, username, password } = req.body;
 
-  const user = await User.findOne({ fullName, username });
+  if (!fullName || !username || !password) {
+    return res.json({
+      EM: "Vui lòng nhập tên, tên đăng nhập và mật khẩu",
+      EC: -1,
+      DT: "",
+    });
+  }
+
+  const user = await User.findOne({ username, fullName });
 
   if (!user) {
     return res.json({
-      EM: "Họ tên hoặc tên đăng nhập không chính xác",
+      EM: "Tài khoản không tồn tại",
       EC: -1,
       DT: "",
     });
@@ -135,7 +149,7 @@ const LoginUser = async (req, res) => {
   const isPasswordValid = await bcrypt.compare(password, user.password);
   if (!isPasswordValid) {
     return res.json({
-      EM: "Mật khẩu không đúng",
+      EM: "Mật khẩu không chính xác",
       EC: -1,
       DT: "",
     });
@@ -145,48 +159,34 @@ const LoginUser = async (req, res) => {
     EM: "Đăng nhập thành công",
     EC: 0,
     DT: {
-      fullName: user.fullName,
-      tokenUser: user.tokenUser,
-      username: user.username,
-      role: user.role,
       id: user._id,
+      fullName,
+      username,
+      role: user.role,
     },
   });
 };
 
 const Forgot = async (req, res) => {
   const { email, code, password } = req.body;
-  const codeNumbers = await Code.findOne({ code });
-  const hashedPassword = await bcrypt.hash(password, 10);
-
   if (!email || !code || !password) {
+    return res.json({ EM: "Vui lòng nhập đầy đủ thông tin", EC: -1, DT: "" });
+  }
+
+  const codeEntry = await Code.findOne({ email, code });
+  if (!codeEntry) {
     return res.json({
-      EM: "Những thông tin bạn nhập là không đủ để đăng ký tài khoản",
+      EM: "Mã xác thực không đúng hoặc đã hết hạn",
       EC: -1,
       DT: "",
     });
   }
 
-  if (codeNumbers.code !== code) {
-    return res.json({
-      EM: "Mã xác thực bạn nhập là không chính xác",
-      EC: -1,
-      DT: "",
-    });
-  }
-
+  await Code.deleteOne({ _id: codeEntry._id });
+  const hashedPassword = await bcrypt.hash(password, 10);
   await User.updateOne({ email }, { $set: { password: hashedPassword } });
 
-  return res.json({
-    EM: "Đã thay đổi mật khẩu thành công!",
-    EC: 0,
-    DT: "",
-  });
+  return res.json({ EM: "Mật khẩu đã được đặt lại thành công", EC: 0, DT: "" });
 };
 
-module.exports = {
-  Xacthuc,
-  RegisterUser,
-  LoginUser,
-  Forgot,
-};
+module.exports = { Xacthuc, RegisterUser, LoginUser, Forgot };

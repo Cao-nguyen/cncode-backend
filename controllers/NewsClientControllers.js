@@ -1,6 +1,5 @@
 const News = require("../models/NewsModel");
 const Comment = require("../models/CommentModel");
-const { report } = require("..");
 
 const NewsRead = async (req, res) => {
   try {
@@ -8,14 +7,16 @@ const NewsRead = async (req, res) => {
       deleted: false,
       show: true,
       isChecked: true,
-    }).sort({ createdAt: -1 });
+    })
+      .sort({ createdAt: -1 })
+      .populate("authorId", "fullName");
 
     return res.json({
       EC: 0,
       EM: "Thành công",
       DT: news,
     });
-  } catch {
+  } catch (error) {
     return res.json({
       EC: -1,
       EM: "Thất bại",
@@ -89,66 +90,78 @@ const NewsUnlikeCreate = async (req, res) => {
 
 const CommentCreate = async (req, res) => {
   const io = req.app.get("io");
-  const { fullName, chat, slug, tagName, idChat } = req.body;
+  const { userId, chat, slug, tagName, idChat } = req.body;
 
   if (tagName === null) {
-    const data = new Comment({
-      comments: {
-        name: fullName,
-        comment: chat,
-        report: 0,
-        like: [],
-        reply: [],
-      },
-      isPost: slug,
+    const newComment = Comment.create({
+      postId: slug,
+      postType: "news",
+      userId: userId,
+      comment: chat,
     });
 
-    let response = await data.save();
+    try {
+      let savedComment = await newComment.save();
 
-    if (response) {
-      const newComment = await Comment.findById(response._id);
-      io.emit("pushComment", newComment);
+      if (savedComment) {
+        const commentData = await Comment.findById(savedComment._id);
+        io.emit("pushComment", commentData);
 
+        return res.json({
+          EM: "Đã gửi bình luận thành công!",
+          EC: 0,
+          DT: commentData,
+        });
+      } else {
+        return res.json({
+          EM: "Đã gửi bình luận thất bại!",
+          EC: -1,
+          DT: "",
+        });
+      }
+    } catch (error) {
       return res.json({
-        EM: "Đã gửi bình luận thành công!",
-        EC: 0,
-        DT: newComment,
-      });
-    } else {
-      return res.json({
-        EM: "Đã gửi bình luận thất bại!",
+        EM: "Có lỗi xảy ra khi lưu bình luận.",
         EC: -1,
-        DT: "",
+        DT: error.message,
       });
     }
   } else {
-    const data = await Comment.findOneAndUpdate(
-      { _id: idChat },
-      {
-        $push: {
-          "comments.reply": {
-            name: fullName,
-            comment: chat,
-            report: 0,
+    try {
+      const updatedComment = await Comment.findOneAndUpdate(
+        { _id: idChat },
+        {
+          $push: {
+            replies: {
+              userId: userId,
+              comment: chat,
+              likes: [],
+              createdAt: Date.now(),
+            },
           },
         },
-      },
-      { new: true }
-    );
+        { new: true }
+      );
 
-    if (data) {
-      io.emit("pushCommentReply");
-
+      if (updatedComment) {
+        io.emit("pushCommentReply");
+        return res.json({
+          EM: "Đã gửi bình luận thành công!",
+          EC: 0,
+          DT: updatedComment,
+        });
+      } else {
+        return res.json({
+          EM: "Bình luận cần phản hồi không tồn tại.",
+          EC: -1,
+          DT: "",
+        });
+      }
+    } catch (error) {
       return res.json({
-        EM: "Đã gửi bình luận thành công!",
-        EC: 0,
-        DT: data,
-      });
-    } else {
-      return res.json({
-        EM: "Đã gửi bình luận thất bại!",
+        EM: "Có lỗi xảy ra khi thêm phản hồi.",
         EC: -1,
-        DT: "",
+        DT: error.message,
       });
     }
   }
@@ -158,8 +171,14 @@ const CommentRead = async (req, res) => {
   const { slug } = req.params;
 
   const data = await Comment.find({
-    isPost: slug,
-  }).sort({ "comments.time": -1 });
+    postId: slug,
+  })
+    .populate("userId", "fullName")
+    .populate({
+      path: "replies.userId",
+      select: "fullName",
+    })
+    .sort({ createdAt: -1 });
 
   if (data) {
     return res.json({

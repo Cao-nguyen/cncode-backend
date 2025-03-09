@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 
 const commentSchema = new mongoose.Schema(
   {
-    postId: { type: mongoose.Schema.Types.ObjectId },
+    postId: { type: String },
     postType: { type: String, enum: ["blog", "news"] },
     userId: {
       type: mongoose.Schema.Types.ObjectId,

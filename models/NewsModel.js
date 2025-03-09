@@ -5,7 +5,6 @@ const NewsSchema = new mongoose.Schema(
   {
     title: { type: String, trim: true },
     slug: { type: String, unique: true },
-    category: { type: String, default: "General" }, // Phân loại tin tức
     isChecked: { type: Boolean, default: false },
     show: { type: Boolean, default: true },
     description: { type: String },
@@ -17,7 +16,6 @@ const NewsSchema = new mongoose.Schema(
         emotionAt: { type: Date, default: Date.now },
       },
     ],
-    fullName: { type: String },
     authorId: { type: mongoose.Schema.Types.ObjectId, ref: "users" }, // Người đăng tin
     deleted: { type: Boolean, default: false },
   },

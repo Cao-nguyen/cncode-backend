@@ -2,10 +2,14 @@ const express = require("express");
 const Login = require("../controllers/LoginClientControllers");
 const News = require("../controllers/NewsClientControllers");
 const Profile = require("../controllers/ProfileClientControllers");
+const Blog = require("../controllers/BlogClientControllers");
 
 const router = express.Router();
 
 const userRoutes = (app) => {
+  // Blog
+  router.post("/api/v1/client/blog/create", Blog.BlogCreate);
+
   // Profile
   router.get("/api/v1/client/profile/read/:username", Profile.ProfileRead);
   router.get("/api/v1/client/post/read/:fullName", Profile.PostRead);

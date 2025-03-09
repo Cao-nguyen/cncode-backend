@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 const slugify = require("slugify");
 
-const NewsSchema = new mongoose.Schema(
+const BlogSchema = new mongoose.Schema(
   {
     title: { type: String, required: true },
     slug: {
@@ -9,7 +9,8 @@ const NewsSchema = new mongoose.Schema(
       unique: true,
     },
     isChecked: { type: Boolean, default: false },
-    show: { type: Boolean, default: true },
+    show: { type: Boolean, default: false },
+    img: { type: String },
     description: { type: String },
     content: { type: String },
     emotion: [
@@ -18,6 +19,7 @@ const NewsSchema = new mongoose.Schema(
         emotionAt: { type: Date, default: Date.now },
       },
     ],
+    active: { type: Boolean },
     fullName: { type: String },
     deleted: { type: Boolean, default: false },
   },
@@ -26,7 +28,7 @@ const NewsSchema = new mongoose.Schema(
   }
 );
 
-NewsSchema.pre("save", async function (next) {
+BlogSchema.pre("save", async function (next) {
   if (this.isModified("title")) {
     const date = new Date();
     const dateString = `${date.getDate()}-${
@@ -40,6 +42,6 @@ NewsSchema.pre("save", async function (next) {
   next();
 });
 
-const News = mongoose.model("News", NewsSchema);
+const Blog = mongoose.model("blog", BlogSchema);
 
-module.exports = News;
+module.exports = Blog;

@@ -9,10 +9,11 @@ const router = express.Router();
 const userRoutes = (app) => {
   // Blog
   router.post("/api/v1/client/blog/create", Blog.BlogCreate);
+  router.get("/api/v1/client/blog/read/:username", Blog.BlogRead);
 
   // Profile
   router.get("/api/v1/client/profile/read/:username", Profile.ProfileRead);
-  router.get("/api/v1/client/post/read/:fullName", Profile.PostRead);
+  router.get("/api/v1/client/post/read/:username", Profile.PostRead);
 
   // Tin tức
   router.get("/api/v1/client/comment/read/:slug", News.CommentRead);

@@ -19,6 +19,7 @@ const NewsSchema = new mongoose.Schema(
       },
     ],
     fullName: { type: String },
+    by: { type: String },
     deleted: { type: Boolean, default: false },
   },
   {

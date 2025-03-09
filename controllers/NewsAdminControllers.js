@@ -2,7 +2,8 @@ const News = require("../models/NewsModel");
 
 const NewsCreate = async (req, res) => {
   try {
-    const { title, isChecked, show, description, content, fullName } = req.body;
+    const { title, isChecked, show, description, content, fullName, username } =
+      req.body;
 
     const newNews = new News({
       title,
@@ -11,6 +12,7 @@ const NewsCreate = async (req, res) => {
       description,
       content,
       fullName,
+      by: username,
     });
 
     await newNews.save();

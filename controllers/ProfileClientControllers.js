@@ -39,10 +39,9 @@ const ProfileRead = async (req, res) => {
 };
 
 const PostRead = async (req, res) => {
-  const fullName = req.params.fullName;
-  console.log(fullName);
+  const username = req.params.username;
 
-  const news = await News.find({ fullName: fullName });
+  const news = await News.find({ by: username });
 
   return res.json({
     EM: "Thành công!",

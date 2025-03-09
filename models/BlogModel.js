@@ -21,6 +21,7 @@ const BlogSchema = new mongoose.Schema(
     ],
     active: { type: Boolean },
     fullName: { type: String },
+    By: { type: String },
     deleted: { type: Boolean, default: false },
   },
   {

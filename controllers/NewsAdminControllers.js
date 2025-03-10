@@ -2,23 +2,20 @@ const News = require("../models/NewsModel");
 
 const NewsCreate = async (req, res) => {
   try {
-    const {
-      title,
-      isChecked,
-      show,
-      description,
-      content,
-      id: authorId,
-    } = req.body;
+    const { title, isChecked, show, description, content, authorId } = req.body;
 
     if (!authorId) {
       return res.json({ EC: -1, EM: "Người đăng tin là bắt buộc", DT: "" });
     }
 
+    if (show === "") {
+      showFormat = false;
+    }
+
     const newNews = new News({
       title,
       isChecked,
-      show,
+      showFormat,
       description,
       content,
       authorId,

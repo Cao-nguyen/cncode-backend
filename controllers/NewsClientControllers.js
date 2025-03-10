@@ -105,7 +105,7 @@ const CommentCreate = async (req, res) => {
 
       if (savedComment) {
         const commentData = await Comment.findById(savedComment._id);
-        io.emit("pushComment", commentData);
+        io.emit("pushComment");
 
         return res.json({
           EM: "Đã gửi bình luận thành công!",

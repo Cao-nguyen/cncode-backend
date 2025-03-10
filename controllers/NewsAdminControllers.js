@@ -10,6 +10,8 @@ const NewsCreate = async (req, res) => {
 
     if (show === "") {
       showFormat = false;
+    } else {
+      showFormat = show;
     }
 
     const newNews = new News({

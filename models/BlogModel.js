@@ -17,6 +17,7 @@ const BlogSchema = new mongoose.Schema(
         emotionAt: { type: Date, default: Date.now },
       },
     ],
+    authorId: { type: mongoose.Schema.Types.ObjectId, ref: "users" },
     active: { type: Boolean, default: true },
     deleted: { type: Boolean, default: false },
     author: {

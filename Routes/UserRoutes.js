@@ -9,7 +9,7 @@ const router = express.Router();
 const userRoutes = (app) => {
   // Blog
   router.post("/api/v1/client/blog/create", Blog.BlogCreate);
-  router.get("/api/v1/client/blog/read/:username", Blog.BlogRead);
+  router.get("/api/v1/client/blog/read/:id", Blog.BlogRead);
 
   // Profile
   router.get("/api/v1/client/profile/read/:username", Profile.ProfileRead);

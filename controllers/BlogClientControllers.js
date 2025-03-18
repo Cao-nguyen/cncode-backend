@@ -1,11 +1,13 @@
 const Blog = require("../models/BlogModel");
 
 const BlogRead = async (req, res) => {
-  const { username } = req.params;
+  const { id } = req.params;
 
   const rawBlog = await Blog.find({
-    By: username,
-  });
+    authorId: id,
+  })
+    .populate("authorId", "fullName")
+    .select("-emotion");
 
   if (rawBlog) {
     return res.json({
@@ -24,16 +26,7 @@ const BlogRead = async (req, res) => {
 
 const BlogCreate = async (req, res) => {
   const io = req.app.get("io");
-  const {
-    fullName,
-    title,
-    content,
-    description,
-    show,
-    isChecked,
-    img,
-    username,
-  } = req.body;
+  const { title, content, description, show, isChecked, img, id } = req.body;
 
   const blog = new Blog({
     title: title,
@@ -43,8 +36,7 @@ const BlogCreate = async (req, res) => {
     description: description,
     content: content,
     active: false,
-    fullName: fullName,
-    By: username,
+    authorId: id,
   });
 
   const rawBlog = await blog.save();

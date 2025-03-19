@@ -7,10 +7,17 @@ const Ssl = require("../controllers/SslAdminControllers");
 const Use = require("../controllers/UseAdminControllers");
 const Member = require("../controllers/MemberAdminControllers");
 const Web = require("../controllers/WebAdminControllers");
+const Blog = require("../controllers/BlogAdminControllers");
 
 const router = express.Router();
 
 const adminRoutes = (app) => {
+  // Admin - Blog
+  router.get("/api/v1/admin/blog/read", Blog.BlogRead);
+  router.patch("/api/v1/admin/blog/delete/:id", Blog.BlogDelete);
+  // router.post("/api/v1/admin/news/create", Blog.NewsCreate);
+  // router.patch("/api/v1/admin/news/edit/:id", Blog.NewsEdit);
+
   // Admin - Thông tin về website
   router.patch("/api/v1/admin/web/read", Web.WebRead);
   router.patch("/api/v1/admin/web/edit", Web.WebEdit);

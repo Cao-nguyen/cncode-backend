@@ -46,7 +46,7 @@ const Xacthuc = async (req, res) => {
 
 const RegisterUser = async (req, res) => {
   try {
-    const { fullName, email, username, password, code } = req.body;
+    const { fullName, email, username, password, code, whereNow } = req.body;
 
     if (!email || !fullName || !username || !password || !code) {
       return res.json({
@@ -90,6 +90,7 @@ const RegisterUser = async (req, res) => {
       username,
       password: hashedPassword,
       coins: "0",
+      ks: whereNow,
       avatar:
         "https://res.cloudinary.com/dckuqnehz/image/upload/v1740879702/uploads/img/18-01-2025/g354ky1ob557wmdz6sca",
     });
@@ -107,18 +108,22 @@ const RegisterUser = async (req, res) => {
     user.huyhieuId = newHuyhieu._id;
     user.followId = newFollow._id;
     user.courseId = newCourse._id;
-    await user.save();
+    const data = await user.save();
 
-    return res.json({
-      EM: "Đăng ký thành công!",
-      EC: 0,
-      DT: {
-        fullName: user.fullName,
-        username: user.username,
-        role: user.role,
-        id: user._id,
-      },
-    });
+    if (data) {
+      await Code.findOneAndDelete({ email: email });
+
+      return res.json({
+        EM: "Đăng ký thành công!",
+        EC: 0,
+        DT: {
+          fullName: user.fullName,
+          username: user.username,
+          role: user.role,
+          id: user._id,
+        },
+      });
+    }
   } catch (error) {
     console.error(error);
     return res.status(500).json({ EM: "Lỗi server", EC: -2, DT: "" });

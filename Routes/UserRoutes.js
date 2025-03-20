@@ -3,6 +3,7 @@ const Login = require("../controllers/LoginClientControllers");
 const News = require("../controllers/NewsClientControllers");
 const Profile = require("../controllers/ProfileClientControllers");
 const Blog = require("../controllers/BlogClientControllers");
+const Access = require("../controllers/AccessAdminControllers");
 
 const router = express.Router();
 
@@ -31,6 +32,9 @@ const userRoutes = (app) => {
   router.post("/api/v1/client/dangky", Login.RegisterUser);
   router.post("/api/v1/client/dangnhap", Login.LoginUser);
   router.patch("/api/v1/client/forgot", Login.Forgot);
+
+  // Truy cập
+  router.get("/api/v1/client/access/read", Access.AccessRead);
 
   app.use(router);
 };

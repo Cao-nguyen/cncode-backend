@@ -1,6 +1,6 @@
 const Blog = require("../models/BlogModel");
 
-const BlogRead = async (req, res) => {
+const MeblogRead = async (req, res) => {
   const { id } = req.params;
 
   const rawBlog = await Blog.find({
@@ -11,13 +11,13 @@ const BlogRead = async (req, res) => {
 
   if (rawBlog) {
     return res.json({
-      EM: "Đăng tải bài viết thành công!",
+      EM: "Thành công!",
       EC: 0,
       DT: rawBlog,
     });
   } else {
     return res.json({
-      EM: "Đăng tải bài viết thất bại!",
+      EM: "Thất bại",
       EC: -1,
       DT: "",
     });
@@ -58,4 +58,25 @@ const BlogCreate = async (req, res) => {
   }
 };
 
-module.exports = { BlogCreate, BlogRead };
+const BlogRead = async (req, res) => {
+  const rawBlog = await Blog.find({}).populate(
+    "authorId",
+    "fullName avatar role"
+  );
+
+  if (rawBlog) {
+    return res.json({
+      EM: "Thành công!",
+      EC: 0,
+      DT: rawBlog,
+    });
+  } else {
+    return res.json({
+      EM: "Thất bại!",
+      EC: -1,
+      DT: "",
+    });
+  }
+};
+
+module.exports = { BlogCreate, MeblogRead, BlogRead };

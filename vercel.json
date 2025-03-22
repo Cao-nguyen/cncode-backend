@@ -17,6 +17,5 @@
         "Access-Control-Allow-Headers": "Content-Type, Authorization"
       }
     }
-  ],
-  "regions": ["hkg1", "sin1", "iad1"]
+  ]
 }

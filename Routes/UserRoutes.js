@@ -4,10 +4,15 @@ const News = require("../controllers/NewsClientControllers");
 const Profile = require("../controllers/ProfileClientControllers");
 const Blog = require("../controllers/BlogClientControllers");
 const Access = require("../controllers/AccessAdminControllers");
+const Home = require("../controllers/HomeClientControllers");
 
 const router = express.Router();
 
 const userRoutes = (app) => {
+  // Home
+  router.get("/api/v1/client/blogHome/read", Home.BlogRead);
+  router.get("/api/v1/client/newsHome/read", Home.NewsRead);
+
   // Blog
   router.post("/api/v1/client/blog/create", Blog.BlogCreate);
   router.get("/api/v1/client/blog/read", Blog.BlogRead);

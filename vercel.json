@@ -4,12 +4,26 @@
     {
       "src": "index.js",
       "use": "@vercel/node"
+    },
+    {
+      "src": "api/socket.js",
+      "use": "@vercel/node"
     }
   ],
   "routes": [
     {
+      "src": "/api/socket",
+      "dest": "api/socket.js"
+    },
+    {
       "src": "/api/(.*)",
-      "dest": "index.js"
+      "dest": "index.js",
+      "headers": {
+        "Cache-Control": "s-maxage=600, stale-while-revalidate",
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
+        "Access-Control-Allow-Headers": "Content-Type, Authorization"
+      }
     }
   ]
 }

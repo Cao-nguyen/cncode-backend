@@ -16,6 +16,7 @@ const userRoutes = (app) => {
 
   // Ask
   router.post("/api/v1/client/ask/create", Ask.AskCreate);
+  router.post("/api/v1/client/askReply/create", Ask.AskReplyCreate);
   router.get("/api/v1/client/ask/read", Ask.AskRead);
 
   // Blog

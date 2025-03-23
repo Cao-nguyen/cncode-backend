@@ -6,6 +6,7 @@ const Blog = require("../controllers/BlogClientControllers");
 const Access = require("../controllers/AccessAdminControllers");
 const Home = require("../controllers/HomeClientControllers");
 const Ask = require("../controllers/AskClientControllers");
+const Settings = require("../controllers/SettingsClientControllers");
 
 const router = express.Router();
 
@@ -13,6 +14,10 @@ const userRoutes = (app) => {
   // Home
   router.get("/api/v1/client/blogHome/read", Home.BlogRead);
   router.get("/api/v1/client/newsHome/read", Home.NewsRead);
+
+  // Settings
+  router.get("/api/v1/client/user/read/:id", Settings.UserRead);
+  router.get("/api/v1/client/user/edit", Settings.UserEdit);
 
   // Ask
   router.post("/api/v1/client/ask/create", Ask.AskCreate);

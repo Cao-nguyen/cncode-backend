@@ -4,10 +4,10 @@ const randomCode = require("../helpers/randomCode");
 const emailTemplate = require("../helpers/emailTemplate");
 const Code = require("../models/CodeModel");
 const User = require("../models/UserModel");
-const Item = require("../models/itemModel");
-const Huyhieu = require("../models/huyhieuModel");
-const Follow = require("../models/followModel");
-const Course = require("../models/courseModel");
+const meItem = require("../models/meitemModel");
+const meHuyhieu = require("../models/mehuyhieuModel");
+const meFollow = require("../models/mefollowModel");
+const meCourse = require("../models/mecourseModel");
 
 const Xacthuc = async (req, res) => {
   const { email } = req.body;
@@ -48,7 +48,10 @@ const RegisterUser = async (req, res) => {
   try {
     const { fullName, email, username, password, code, whereNow } = req.body;
 
-    if (!email || !fullName || !username || !password || !code) {
+    const newFullName = fullName.trim();
+    const newUsername = username.trim();
+
+    if (!email || !newFullName || !newUsername || !password || !code) {
       return res.json({
         EM: "Vui lòng nhập đầy đủ thông tin",
         EC: -1,
@@ -86,8 +89,8 @@ const RegisterUser = async (req, res) => {
 
     const user = new User({
       email,
-      fullName,
-      username,
+      fullName: newFullName,
+      username: newUsername,
       password: hashedPassword,
       coins: "0",
       ks: whereNow,
@@ -95,13 +98,17 @@ const RegisterUser = async (req, res) => {
         "https://res.cloudinary.com/dckuqnehz/image/upload/v1740879702/uploads/img/18-01-2025/g354ky1ob557wmdz6sca",
     });
 
-    await user.save();
+    if (user) {
+      await user.save();
+    } else {
+      return;
+    }
 
     const [newItem, newHuyhieu, newCourse, newFollow] = await Promise.all([
-      new Item({ userId: user._id }).save(),
-      new Huyhieu({ userId: user._id }).save(),
-      new Course({ userId: user._id }).save(),
-      new Follow({ followerId: user._id, followingId: user._id }).save(),
+      new meItem({ userId: user._id }).save(),
+      new meHuyhieu({ userId: user._id }).save(),
+      new meCourse({ userId: user._id }).save(),
+      new meFollow({ followerId: user._id, followingId: user._id }).save(),
     ]);
 
     user.itemId = newItem._id;
@@ -133,7 +140,10 @@ const RegisterUser = async (req, res) => {
 const LoginUser = async (req, res) => {
   const { fullName, username, password } = req.body;
 
-  if (!fullName || !username || !password) {
+  const newFullName = fullName.trim();
+  const newUsername = username.trim();
+
+  if (!newFullName || !newUsername || !password) {
     return res.json({
       EM: "Vui lòng nhập tên, tên đăng nhập và mật khẩu",
       EC: -1,
@@ -141,7 +151,10 @@ const LoginUser = async (req, res) => {
     });
   }
 
-  const user = await User.findOne({ username, fullName });
+  const user = await User.findOne({
+    fullName: newFullName,
+    username: newUsername,
+  });
 
   if (!user) {
     return res.json({

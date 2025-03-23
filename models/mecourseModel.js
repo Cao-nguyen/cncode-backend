@@ -5,7 +5,7 @@ const Schema = mongoose.Schema;
 const CourseSchema = new Schema(
   {
     title: { type: String }, // Tên khóa học
-    slug: { type: String, unique: true }, // URL khóa học
+    slug: { type: String, default: "" }, // URL khóa học
     description: { type: String }, // Mô tả khóa học
     image: { type: String }, // Ảnh minh họa
     price: { type: Number }, // Giá khóa học
@@ -13,13 +13,13 @@ const CourseSchema = new Schema(
     teacherId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "users",
-    }, // Giảng viên
+    },
     lessons: [
       {
-        title: { type: String }, // Tiêu đề bài học
-        videoUrl: { type: String }, // Link video bài học
-        content: { type: String }, // Nội dung bài học
-        duration: { type: Number }, // Thời lượng (phút)
+        title: { type: String },
+        videoUrl: { type: String },
+        content: { type: String },
+        duration: { type: Number },
       },
     ],
     students: [
@@ -28,11 +28,11 @@ const CourseSchema = new Schema(
         enrolledAt: { type: Date, default: Date.now },
       },
     ],
-    status: { type: String, enum: ["public", "private"], default: "public" }, // Trạng thái khóa học
+    status: { type: String, enum: ["public", "private"], default: "public" },
   },
   {
     timestamps: true,
   }
 );
 
-module.exports = mongoose.model("courses", CourseSchema);
+module.exports = mongoose.model("meCourses", CourseSchema);

@@ -4,7 +4,7 @@ const slugify = require("slugify");
 const BlogSchema = new mongoose.Schema(
   {
     title: { type: String },
-    slug: { type: String, unique: true },
+    slug: { type: String },
     isChecked: { type: Boolean, default: false },
     show: { type: Boolean, default: false },
     img: { type: String },

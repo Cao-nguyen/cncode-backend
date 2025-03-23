@@ -22,4 +22,4 @@ const BadgeSchema = new Schema(
   }
 );
 
-module.exports = mongoose.model("badges", BadgeSchema);
+module.exports = mongoose.model("meBadges", BadgeSchema);

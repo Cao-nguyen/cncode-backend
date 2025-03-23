@@ -4,7 +4,7 @@ const slugify = require("slugify");
 const NewsSchema = new mongoose.Schema(
   {
     title: { type: String, trim: true },
-    slug: { type: String, unique: true },
+    slug: { type: String },
     isChecked: { type: Boolean, default: false },
     show: { type: Boolean, default: true },
     description: { type: String },

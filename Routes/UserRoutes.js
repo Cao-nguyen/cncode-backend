@@ -5,6 +5,7 @@ const Profile = require("../controllers/ProfileClientControllers");
 const Blog = require("../controllers/BlogClientControllers");
 const Access = require("../controllers/AccessAdminControllers");
 const Home = require("../controllers/HomeClientControllers");
+const Ask = require("../controllers/AskClientControllers");
 
 const router = express.Router();
 
@@ -12,6 +13,10 @@ const userRoutes = (app) => {
   // Home
   router.get("/api/v1/client/blogHome/read", Home.BlogRead);
   router.get("/api/v1/client/newsHome/read", Home.NewsRead);
+
+  // Ask
+  router.post("/api/v1/client/ask/create", Ask.AskCreate);
+  router.get("/api/v1/client/ask/read", Ask.AskRead);
 
   // Blog
   router.post("/api/v1/client/blog/create", Blog.BlogCreate);

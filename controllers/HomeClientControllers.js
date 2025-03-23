@@ -2,7 +2,12 @@ const Blog = require("../models/BlogModel");
 const News = require("../models/NewsModel");
 
 const BlogRead = async (req, res) => {
-  const data = await Blog.find()
+  const data = await Blog.find({
+    deleted: false,
+    active: true,
+    show: true,
+    isChecked: true,
+  })
     .sort({ createdAt: -1 })
     .limit(3)
     .populate("authorId", "fullName avatar");
@@ -23,7 +28,7 @@ const BlogRead = async (req, res) => {
 };
 
 const NewsRead = async (req, res) => {
-  const data = await News.find()
+  const data = await News.find({ deleted: false, show: true, isChecked: true })
     .sort({ createdAt: -1 })
     .limit(3)
     .populate("authorId", "fullName");

@@ -18,6 +18,7 @@ const userRoutes = (app) => {
   // Settings
   router.get("/api/v1/client/user/read/:id", Settings.UserRead);
   router.patch("/api/v1/client/user/edit/fullName", Settings.UserEditFullName);
+  router.patch("/api/v1/client/user/edit/username", Settings.UserEditUsername);
 
   // Ask
   router.post("/api/v1/client/ask/create", Ask.AskCreate);

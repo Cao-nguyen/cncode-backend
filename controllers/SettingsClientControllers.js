@@ -20,46 +20,24 @@ const UserRead = async (req, res) => {
   }
 };
 
-const UserEdit = async (req, res) => {
-  const {
-    id,
-    fullName,
-    username,
-    info,
-    birthday,
-    tinh,
-    school,
-    avatar,
-    web,
-    git,
-    zalo,
-    facebook,
-    tiktok,
-    youtube,
-  } = req.body;
+const UserEditFullName = async (req, res) => {
+  const { id, fullName } = req.body;
 
-  if (fullName) {
-    const data = await User.findOneAndDelete(
-      { _id: id },
-      { fullName: fullName }
-    );
+  const data = await User.findOneAndUpdate({ _id: id }, { fullName: fullName });
 
-    if (data) {
-      return res.json({
-        EM: "Cập nhật thành công!",
-        EC: 0,
-        DT: data,
-      });
-    } else {
-      return res.json({
-        EM: "Cập nhật thất bại!",
-        EC: -1,
-        DT: "",
-      });
-    }
+  if (data) {
+    return res.json({
+      EM: "Cập nhật thành công!",
+      EC: 0,
+      DT: data,
+    });
   } else {
-    return;
+    return res.json({
+      EM: "Cập nhật thất bại!",
+      EC: -1,
+      DT: "",
+    });
   }
 };
 
-module.exports = { UserRead, UserEdit };
+module.exports = { UserRead, UserEditFullName };

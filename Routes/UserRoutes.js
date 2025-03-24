@@ -19,6 +19,10 @@ const userRoutes = (app) => {
   router.get("/api/v1/client/user/read/:id", Settings.UserRead);
   router.patch("/api/v1/client/user/edit/fullName", Settings.UserEditFullName);
   router.patch("/api/v1/client/user/edit/username", Settings.UserEditUsername);
+  router.patch("/api/v1/client/user/edit/info", Settings.UserEditInfo);
+  router.patch("/api/v1/client/user/edit/birthday", Settings.UserEditBirthday);
+  router.patch("/api/v1/client/user/edit/tinh", Settings.UserEditTinh);
+  router.patch("/api/v1/client/user/edit/school", Settings.UserEditSchool);
 
   // Ask
   router.post("/api/v1/client/ask/create", Ask.AskCreate);

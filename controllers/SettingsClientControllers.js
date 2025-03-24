@@ -71,4 +71,97 @@ const UserEditUsername = async (req, res) => {
   }
 };
 
-module.exports = { UserRead, UserEditFullName, UserEditUsername };
+const UserEditInfo = async (req, res) => {
+  const { id, info } = req.body;
+
+  const data = await User.findOneAndUpdate({ _id: id }, { info: info });
+
+  if (data) {
+    return res.json({
+      EM: "Cập nhật thành công!",
+      EC: 0,
+      DT: data,
+    });
+  } else {
+    return res.json({
+      EM: "Cập nhật thất bại!",
+      EC: -1,
+      DT: "",
+    });
+  }
+};
+
+const UserEditBirthday = async (req, res) => {
+  const { id, day, month, year } = req.body;
+  const io = req.app.get("io");
+
+  const birthday = `${day} / ${month} / ${year}`;
+
+  const data = await User.findOneAndUpdate({ _id: id }, { birthday: birthday });
+
+  if (data) {
+    const newData = await User.findOne({ _id: id }).select("birthday");
+    io.emit("changeBirthday", newData);
+    return res.json({
+      EM: "Cập nhật thành công!",
+      EC: 0,
+      DT: data,
+    });
+  } else {
+    return res.json({
+      EM: "Cập nhật thất bại!",
+      EC: -1,
+      DT: "",
+    });
+  }
+};
+
+const UserEditTinh = async (req, res) => {
+  const { id, tinh } = req.body;
+
+  const data = await User.findOneAndUpdate({ _id: id }, { tinh: tinh });
+
+  if (data) {
+    return res.json({
+      EM: "Cập nhật thành công!",
+      EC: 0,
+      DT: data,
+    });
+  } else {
+    return res.json({
+      EM: "Cập nhật thất bại!",
+      EC: -1,
+      DT: "",
+    });
+  }
+};
+
+const UserEditSchool = async (req, res) => {
+  const { id, school } = req.body;
+
+  const data = await User.findOneAndUpdate({ _id: id }, { school: school });
+
+  if (data) {
+    return res.json({
+      EM: "Cập nhật thành công!",
+      EC: 0,
+      DT: data,
+    });
+  } else {
+    return res.json({
+      EM: "Cập nhật thất bại!",
+      EC: -1,
+      DT: "",
+    });
+  }
+};
+
+module.exports = {
+  UserRead,
+  UserEditFullName,
+  UserEditUsername,
+  UserEditInfo,
+  UserEditBirthday,
+  UserEditTinh,
+  UserEditSchool,
+};

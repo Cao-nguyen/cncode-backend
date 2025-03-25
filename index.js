@@ -26,7 +26,6 @@ adminRoutes(app);
 const server = http.createServer(app);
 const io = socketIo(server, {
   cors: {},
-  transports: ["polling"],
 });
 
 app.set("io", io);

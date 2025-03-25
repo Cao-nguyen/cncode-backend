@@ -16,6 +16,7 @@ const userRoutes = (app) => {
   router.get("/api/v1/client/newsHome/read", Home.NewsRead);
 
   // Settings
+  router.post("/api/v1/client/deletedImg", Settings.UserDeletedImage);
   router.get("/api/v1/client/user/read/:id", Settings.UserRead);
   router.patch("/api/v1/client/user/edit/fullName", Settings.UserEditFullName);
   router.patch("/api/v1/client/user/edit/username", Settings.UserEditUsername);
@@ -23,6 +24,7 @@ const userRoutes = (app) => {
   router.patch("/api/v1/client/user/edit/birthday", Settings.UserEditBirthday);
   router.patch("/api/v1/client/user/edit/tinh", Settings.UserEditTinh);
   router.patch("/api/v1/client/user/edit/school", Settings.UserEditSchool);
+  router.patch("/api/v1/client/user/edit/avatar", Settings.UserEditAvatar);
   router.patch("/api/v1/client/user/edit/web", Settings.UserEditWeb);
   router.patch("/api/v1/client/user/edit/git", Settings.UserEditGit);
 

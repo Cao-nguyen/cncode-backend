@@ -156,6 +156,66 @@ const UserEditSchool = async (req, res) => {
   }
 };
 
+const UserEditWeb = async (req, res) => {
+  const { id, web } = req.body;
+
+  const data = await User.findOneAndUpdate(
+    { _id: id, "mxh.name": "web" },
+    { $set: { "mxh.$.link": web } },
+    { new: true }
+  );
+
+  if (!data) {
+    await User.findOneAndUpdate(
+      { _id: id },
+      { $push: { mxh: { name: "web", link: web } } },
+      { new: true }
+    );
+
+    return res.json({
+      EM: "Cập nhật thành công!",
+      EC: 0,
+      DT: data,
+    });
+  } else {
+    return res.json({
+      EM: "Cập nhật thành công!",
+      EC: 0,
+      DT: data,
+    });
+  }
+};
+
+const UserEditGit = async (req, res) => {
+  const { id, git } = req.body;
+
+  const data = await User.findOneAndUpdate(
+    { _id: id, "mxh.name": "git" },
+    { $set: { "mxh.$.link": git } },
+    { new: true }
+  );
+
+  if (!data) {
+    await User.findOneAndUpdate(
+      { _id: id },
+      { $push: { mxh: { name: "git", link: git } } },
+      { new: true }
+    );
+
+    return res.json({
+      EM: "Cập nhật thành công!",
+      EC: 0,
+      DT: data,
+    });
+  } else {
+    return res.json({
+      EM: "Cập nhật thành công!",
+      EC: 0,
+      DT: data,
+    });
+  }
+};
+
 module.exports = {
   UserRead,
   UserEditFullName,
@@ -164,4 +224,6 @@ module.exports = {
   UserEditBirthday,
   UserEditTinh,
   UserEditSchool,
+  UserEditWeb,
+  UserEditGit,
 };

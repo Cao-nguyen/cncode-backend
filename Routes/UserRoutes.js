@@ -23,6 +23,8 @@ const userRoutes = (app) => {
   router.patch("/api/v1/client/user/edit/birthday", Settings.UserEditBirthday);
   router.patch("/api/v1/client/user/edit/tinh", Settings.UserEditTinh);
   router.patch("/api/v1/client/user/edit/school", Settings.UserEditSchool);
+  router.patch("/api/v1/client/user/edit/web", Settings.UserEditWeb);
+  router.patch("/api/v1/client/user/edit/git", Settings.UserEditGit);
 
   // Ask
   router.post("/api/v1/client/ask/create", Ask.AskCreate);

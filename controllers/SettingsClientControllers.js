@@ -274,6 +274,135 @@ const UserEditGit = async (req, res) => {
   }
 };
 
+const UserEditZalo = async (req, res) => {
+  const { id, zalo } = req.body;
+  const io = req.app.get("io");
+
+  const link = `https://zalo.me/${zalo}`;
+
+  const data = await User.findOneAndUpdate(
+    { _id: id, "mxh.name": "zalo" },
+    { $set: { "mxh.$.link": link } },
+    { new: true }
+  );
+
+  if (!data) {
+    await User.findOneAndUpdate(
+      { _id: id },
+      { $push: { mxh: { name: "zalo", link: link } } },
+      { new: true }
+    );
+
+    const newData = await User.findOne({ _id: id }).select("mxh");
+    io.emit("changeZalo", newData);
+
+    return res.json({
+      EM: "Cập nhật thành công!",
+      EC: 0,
+      DT: data,
+    });
+  }
+
+  const newData = await User.findOne({ _id: id }).select("mxh");
+  io.emit("changeZalo", newData);
+
+  return res.json({
+    EM: "Cập nhật thành công!",
+    EC: 0,
+    DT: data,
+  });
+};
+
+const UserEditFacebook = async (req, res) => {
+  const { id, facebook } = req.body;
+
+  const data = await User.findOneAndUpdate(
+    { _id: id, "mxh.name": "facebook" },
+    { $set: { "mxh.$.link": facebook } },
+    { new: true }
+  );
+
+  if (!data) {
+    await User.findOneAndUpdate(
+      { _id: id },
+      { $push: { mxh: { name: "facebook", link: facebook } } },
+      { new: true }
+    );
+
+    return res.json({
+      EM: "Cập nhật thành công!",
+      EC: 0,
+      DT: data,
+    });
+  } else {
+    return res.json({
+      EM: "Cập nhật thành công!",
+      EC: 0,
+      DT: data,
+    });
+  }
+};
+
+const UserEditTiktok = async (req, res) => {
+  const { id, tiktok } = req.body;
+
+  const data = await User.findOneAndUpdate(
+    { _id: id, "mxh.name": "tiktok" },
+    { $set: { "mxh.$.link": tiktok } },
+    { new: true }
+  );
+
+  if (!data) {
+    await User.findOneAndUpdate(
+      { _id: id },
+      { $push: { mxh: { name: "tiktok", link: tiktok } } },
+      { new: true }
+    );
+
+    return res.json({
+      EM: "Cập nhật thành công!",
+      EC: 0,
+      DT: data,
+    });
+  } else {
+    return res.json({
+      EM: "Cập nhật thành công!",
+      EC: 0,
+      DT: data,
+    });
+  }
+};
+
+const UserEditYoutube = async (req, res) => {
+  const { id, youtube } = req.body;
+
+  const data = await User.findOneAndUpdate(
+    { _id: id, "mxh.name": "youtube" },
+    { $set: { "mxh.$.link": youtube } },
+    { new: true }
+  );
+
+  if (!data) {
+    await User.findOneAndUpdate(
+      { _id: id },
+      { $push: { mxh: { name: "youtube", link: youtube } } },
+      { new: true }
+    );
+
+    return res.json({
+      EM: "Cập nhật thành công!",
+      EC: 0,
+      DT: data,
+    });
+  } else {
+    return res.json({
+      EM: "Cập nhật thành công!",
+      EC: 0,
+      DT: data,
+    });
+  }
+};
+
 module.exports = {
   UserDeletedImage,
   UserRead,
@@ -286,4 +415,8 @@ module.exports = {
   UserEditAvatar,
   UserEditWeb,
   UserEditGit,
+  UserEditZalo,
+  UserEditFacebook,
+  UserEditTiktok,
+  UserEditYoutube,
 };

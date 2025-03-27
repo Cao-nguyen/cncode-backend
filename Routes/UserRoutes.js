@@ -27,6 +27,10 @@ const userRoutes = (app) => {
   router.patch("/api/v1/client/user/edit/avatar", Settings.UserEditAvatar);
   router.patch("/api/v1/client/user/edit/web", Settings.UserEditWeb);
   router.patch("/api/v1/client/user/edit/git", Settings.UserEditGit);
+  router.patch("/api/v1/client/user/edit/zalo", Settings.UserEditZalo);
+  router.patch("/api/v1/client/user/edit/facebook", Settings.UserEditFacebook);
+  router.patch("/api/v1/client/user/edit/tiktok", Settings.UserEditTiktok);
+  router.patch("/api/v1/client/user/edit/youtube", Settings.UserEditYoutube);
 
   // Ask
   router.post("/api/v1/client/ask/create", Ask.AskCreate);

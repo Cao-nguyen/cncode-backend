@@ -31,6 +31,7 @@ const userRoutes = (app) => {
   router.patch("/api/v1/client/user/edit/facebook", Settings.UserEditFacebook);
   router.patch("/api/v1/client/user/edit/tiktok", Settings.UserEditTiktok);
   router.patch("/api/v1/client/user/edit/youtube", Settings.UserEditYoutube);
+  router.patch("/api/v1/client/user/edit/password", Settings.UserEditPassword);
 
   // Ask
   router.post("/api/v1/client/ask/create", Ask.AskCreate);

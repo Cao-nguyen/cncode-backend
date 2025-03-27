@@ -1,4 +1,5 @@
 const User = require("../models/UserModel");
+const bcrypt = require("bcryptjs");
 const cloudinary = require("cloudinary").v2;
 require("dotenv").config();
 
@@ -403,6 +404,45 @@ const UserEditYoutube = async (req, res) => {
   }
 };
 
+const UserEditPassword = async (req, res) => {
+  const { id, oldPassword, password } = req.body;
+
+  const user = await User.findOne({ _id: id });
+
+  const checkPassword = await bcrypt.compare(oldPassword, user.password);
+
+  if (!checkPassword) {
+    return res.json({
+      EM: "Mật khẩu không chính xác!",
+      EC: 0,
+      DT: data,
+    });
+  } else {
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    const data = await User.findOneAndUpdate(
+      { _id: id },
+      {
+        password: hashedPassword,
+      }
+    );
+
+    if (data) {
+      return res.json({
+        EM: "Cập nhật mật khẩu mới thành công",
+        EC: 0,
+        DT: data,
+      });
+    } else {
+      return res.json({
+        EM: "Cập nhật mật khẩu mới thất bại",
+        EC: -1,
+        DT: "",
+      });
+    }
+  }
+};
+
 module.exports = {
   UserDeletedImage,
   UserRead,
@@ -419,4 +459,5 @@ module.exports = {
   UserEditFacebook,
   UserEditTiktok,
   UserEditYoutube,
+  UserEditPassword,
 };

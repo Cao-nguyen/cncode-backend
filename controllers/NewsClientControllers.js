@@ -9,7 +9,12 @@ const NewsRead = async (req, res) => {
     })
       .sort({ createdAt: -1 })
       .populate("authorId", "fullName")
-      .populate("like.userLike", "fullName");
+      .populate("like.userLike", "fullName")
+      .populate("comments.userComment", "fullName avatar");
+
+    news.forEach((post) => {
+      post.comments.sort((a, b) => b.commentedAt - a.commentedAt);
+    });
 
     return res.json({
       EC: 0,
@@ -44,10 +49,13 @@ const NewsLikeCreate = async (req, res) => {
     );
 
     if (news) {
-      const newData = await News.findOne({ _id: idPost }).populate(
-        "authorId",
-        "fullName"
-      );
+      const newData = await News.findOne({ _id: idPost })
+        .populate("authorId", "fullName")
+        .populate("like.userLike", "fullName")
+        .populate("comments.userComment", "fullName avatar");
+
+      newData.comments.sort((a, b) => b.commentedAt - a.commentedAt);
+
       io.emit("pushLike", newData);
       return res.json({
         EC: 0,
@@ -82,10 +90,13 @@ const NewsUnlikeCreate = async (req, res) => {
     );
 
     if (news) {
-      const newData = await News.findOne({ _id: idPost }).populate(
-        "authorId",
-        "fullName"
-      );
+      const newData = await News.findOne({ _id: idPost })
+        .populate("authorId", "fullName")
+        .populate("like.userLike", "fullName")
+        .populate("comments.userComment", "fullName avatar");
+
+      newData.comments.sort((a, b) => b.commentedAt - a.commentedAt);
+
       io.emit("pushUnlike", newData);
       return res.json({
         EC: 0,

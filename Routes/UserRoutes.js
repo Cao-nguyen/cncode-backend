@@ -7,6 +7,7 @@ const Access = require("../controllers/AccessAdminControllers");
 const Home = require("../controllers/HomeClientControllers");
 const Ask = require("../controllers/AskClientControllers");
 const Settings = require("../controllers/SettingsClientControllers");
+const Comment = require("../controllers/CommentClientServerControllers");
 
 const router = express.Router();
 
@@ -51,6 +52,7 @@ const userRoutes = (app) => {
   router.get("/api/v1/news/client/read", News.NewsRead);
   router.patch("/api/v1/news/client/news/like", News.NewsLikeCreate);
   router.post("/api/v1/news/client/news/unlike", News.NewsUnlikeCreate);
+  router.post("/api/v1/client/news/comment/create", Comment.NewsCommentCreate);
 
   // Đăng ký - Đăng nhập
   router.post("/api/v1/client/xacthuc", Login.Xacthuc);

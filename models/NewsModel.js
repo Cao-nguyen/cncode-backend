@@ -21,6 +21,7 @@ const NewsSchema = new mongoose.Schema(
         _id: false,
         userComment: { type: mongoose.Schema.Types.ObjectId, ref: "users" },
         comment: { type: String },
+        commentedAt: { type: Date, default: Date.now },
         like: [
           {
             _id: false,

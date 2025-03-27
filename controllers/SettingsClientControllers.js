@@ -424,6 +424,7 @@ const UserEditPassword = async (req, res) => {
       { _id: id },
       {
         password: hashedPassword,
+        createdAt: Date.now(),
       }
     );
 

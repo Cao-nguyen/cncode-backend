@@ -48,12 +48,6 @@ const userRoutes = (app) => {
   router.get("/api/v1/client/post/read/:username", Profile.PostRead);
 
   // Tin tức
-  router.get("/api/v1/client/comment/read/:slug", News.CommentRead);
-  router.patch("/api/v1/client/comment/like", News.CommentLike);
-  router.patch("/api/v1/client/comment/unlike", News.CommentUnlike);
-  router.post("/api/v1/client/comment/delete", News.CommentDelete);
-  router.post("/api/v1/client/comment/delete/reply", News.CommentDeleteReply);
-  router.post("/api/v1/client/comment/create", News.CommentCreate);
   router.get("/api/v1/news/client/read", News.NewsRead);
   router.patch("/api/v1/news/client/news/like", News.NewsLikeCreate);
   router.post("/api/v1/news/client/news/unlike", News.NewsUnlikeCreate);

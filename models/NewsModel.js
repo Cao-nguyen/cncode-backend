@@ -9,14 +9,29 @@ const NewsSchema = new mongoose.Schema(
     show: { type: Boolean, default: true },
     description: { type: String },
     content: { type: String },
-    emotion: [
+    like: [
       {
         _id: false,
-        name: { type: String },
-        emotionAt: { type: Date, default: Date.now },
+        userLike: { type: mongoose.Schema.Types.ObjectId, ref: "users" },
+        likedAt: { type: Date, default: Date.now },
       },
     ],
-    authorId: { type: mongoose.Schema.Types.ObjectId, ref: "users" }, // Người đăng tin
+    comments: [
+      {
+        _id: false,
+        userComment: { type: mongoose.Schema.Types.ObjectId, ref: "users" },
+        comment: { type: String },
+        like: [
+          {
+            _id: false,
+            userLike: { type: mongoose.Schema.Types.ObjectId, ref: "users" },
+            likedAt: { type: Date, default: Date.now },
+          },
+        ],
+        parrentId: { type: mongoose.Schema.Types.ObjectId, ref: "news" },
+      },
+    ],
+    authorId: { type: mongoose.Schema.Types.ObjectId, ref: "users" },
     deleted: { type: Boolean, default: false },
   },
   {

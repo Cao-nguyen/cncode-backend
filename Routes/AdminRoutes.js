@@ -15,8 +15,10 @@ const adminRoutes = (app) => {
   // Admin - Blog
   router.get("/api/v1/admin/blog/read", Blog.BlogRead);
   router.patch("/api/v1/admin/blog/delete/:id", Blog.BlogDelete);
-  // router.post("/api/v1/admin/news/create", Blog.NewsCreate);
-  // router.patch("/api/v1/admin/news/edit/:id", Blog.NewsEdit);
+  router.post("/api/v1/admin/blog/create", Blog.BlogCreate);
+  router.patch("/api/v1/admin/blog/edit/:id", Blog.BlogEdit);
+  router.patch("/api/v1/admin/blog/duyet", Blog.BlogDuyet);
+  router.patch("/api/v1/admin/blog/tuchoi", Blog.BlogTuchoi);
 
   // Admin - Thông tin về website
   router.patch("/api/v1/admin/web/read", Web.WebRead);
@@ -48,6 +50,9 @@ const adminRoutes = (app) => {
   router.post("/api/v1/bins/news/delete", Bins.BinsNewsDelete);
   router.patch("/api/v1/bins/news/edit", Bins.BinsNewsEdit);
   router.get("/api/v1/bins/news/read", Bins.BinsNewsRead);
+  router.post("/api/v1/bins/blog/delete", Bins.BinsBlogDelete);
+  router.patch("/api/v1/bins/blog/edit", Bins.BinsBlogEdit);
+  router.get("/api/v1/bins/blog/read", Bins.BinsBlogRead);
 
   // Admin - Giới thiệu
   router.patch("/api/v1/admin/infor/edit", Infor.InforEdit);

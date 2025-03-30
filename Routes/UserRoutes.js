@@ -43,6 +43,10 @@ const userRoutes = (app) => {
   router.post("/api/v1/client/blog/create", Blog.BlogCreate);
   router.get("/api/v1/client/blog/read", Blog.BlogRead);
   router.get("/api/v1/client/meblog/read/:id", Blog.MeblogRead);
+  router.post("/api/v1/client/blog/like", Blog.BlogLike);
+  router.post("/api/v1/client/blog/unlike", Blog.BlogUnlike);
+  router.post("/api/v1/client/blog/f", Blog.BlogF);
+  router.post("/api/v1/client/blog/unf", Blog.BlogUnf);
 
   // Profile
   router.get("/api/v1/client/profile/read/:username", Profile.ProfileRead);

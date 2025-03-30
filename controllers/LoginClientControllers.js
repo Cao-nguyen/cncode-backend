@@ -4,10 +4,6 @@ const randomCode = require("../helpers/randomCode");
 const emailTemplate = require("../helpers/emailTemplate");
 const Code = require("../models/CodeModel");
 const User = require("../models/UserModel");
-const meItem = require("../models/meitemModel");
-const meHuyhieu = require("../models/mehuyhieuModel");
-const meFollow = require("../models/mefollowModel");
-const meCourse = require("../models/mecourseModel");
 
 const Xacthuc = async (req, res) => {
   const { email } = req.body;
@@ -103,19 +99,6 @@ const RegisterUser = async (req, res) => {
     } else {
       return;
     }
-
-    const [newItem, newHuyhieu, newCourse, newFollow] = await Promise.all([
-      new meItem({ userId: user._id }).save(),
-      new meHuyhieu({ userId: user._id }).save(),
-      new meCourse({ userId: user._id }).save(),
-      new meFollow({ followerId: user._id, followingId: user._id }).save(),
-    ]);
-
-    user.itemId = newItem._id;
-    user.huyhieuId = newHuyhieu._id;
-    user.followId = newFollow._id;
-    user.courseId = newCourse._id;
-    const data = await user.save();
 
     if (data) {
       await Code.findOneAndDelete({ email: email });

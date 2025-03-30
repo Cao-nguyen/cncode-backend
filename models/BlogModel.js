@@ -10,11 +10,41 @@ const BlogSchema = new mongoose.Schema(
     img: { type: String },
     description: { type: String },
     content: { type: String },
-    emotion: [
+    like: [
       {
-        userId: { type: mongoose.Schema.Types.ObjectId, ref: "users" },
-        name: { type: String },
-        emotionAt: { type: Date, default: Date.now },
+        _id: false,
+        userLike: { type: mongoose.Schema.Types.ObjectId, ref: "users" },
+        likedAt: { type: Date, default: Date.now },
+      },
+    ],
+    favorites: [
+      {
+        _id: false,
+        userFavorite: { type: mongoose.Schema.Types.ObjectId, ref: "users" },
+        favoritedAt: { type: Date, default: Date.now },
+      },
+    ],
+    comments: [
+      {
+        userComment: { type: mongoose.Schema.Types.ObjectId, ref: "users" },
+        comment: { type: String },
+        commentedAt: { type: Date, default: Date.now },
+        likeComment: [
+          {
+            userLike: { type: mongoose.Schema.Types.ObjectId, ref: "users" },
+            type: { type: String },
+            likedAt: { type: Date, default: Date.now },
+          },
+        ],
+        parrentId: { type: mongoose.Schema.Types.ObjectId, ref: "blogs" },
+      },
+    ],
+    gift: [
+      {
+        userGift: { type: mongoose.Schema.Types.ObjectId, ref: "users" },
+        type: { type: String },
+        giftedAt: { type: Date, default: Date.now },
+        notes: { type: String },
       },
     ],
     authorId: { type: mongoose.Schema.Types.ObjectId, ref: "users" },

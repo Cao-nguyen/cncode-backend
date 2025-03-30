@@ -1,8 +1,4 @@
 const User = require("../models/UserModel");
-const meHuyhieu = require("../models/mehuyhieuModel");
-const meItem = require("../models/meitemModel");
-const meFollow = require("../models/mefollowModel");
-const meCourse = require("../models/mecourseModel");
 const News = require("../models/NewsModel");
 
 const ProfileRead = async (req, res) => {
@@ -19,11 +15,6 @@ const ProfileRead = async (req, res) => {
       DT: "",
     });
   }
-
-  const huyhieu = await meHuyhieu.findOne({ _id: user.huyhieuId });
-  const items = await meItem.find({ _id: user.itemId });
-  const follows = await meFollow.find({ _id: user.followId });
-  const courses = await meCourse.find({ _id: user.courseId });
 
   return res.json({
     EM: "Thành công!",

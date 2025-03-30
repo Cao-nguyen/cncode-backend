@@ -7,7 +7,7 @@ const MeblogRead = async (req, res) => {
     authorId: id,
   })
     .populate("authorId", "fullName")
-    .select("-emotion");
+    .select("-like -comments -gift -favorites");
 
   if (rawBlog) {
     return res.json({
@@ -59,10 +59,14 @@ const BlogCreate = async (req, res) => {
 };
 
 const BlogRead = async (req, res) => {
-  const rawBlog = await Blog.find({}).populate(
-    "authorId",
-    "fullName avatar role"
-  );
+  const rawBlog = await Blog.find({
+    active: true,
+    deleted: false,
+    show: true,
+    isChecked: true,
+  })
+    .populate("authorId", "fullName avatar info role")
+    .sort({ createdAt: -1 });
 
   if (rawBlog) {
     return res.json({
@@ -79,4 +83,118 @@ const BlogRead = async (req, res) => {
   }
 };
 
-module.exports = { BlogCreate, MeblogRead, BlogRead };
+const BlogLike = async (req, res) => {
+  const { id, idPost } = req.body;
+  const io = req.app.get("io");
+
+  const blog = await Blog.findOneAndUpdate(
+    { _id: idPost },
+    {
+      $push: {
+        like: {
+          userLike: id,
+          likedAt: Date.now(),
+        },
+      },
+    },
+    { new: true }
+  );
+
+  if (blog) {
+    io.emit("pushLike");
+    return res.json({
+      EC: 0,
+      EM: "Thành công",
+      DT: blog,
+    });
+  }
+};
+
+const BlogUnlike = async (req, res) => {
+  const { id, idPost } = req.body;
+  const io = req.app.get("io");
+
+  const blog = await Blog.findOneAndUpdate(
+    { _id: idPost },
+    {
+      $pull: {
+        like: {
+          userLike: id,
+        },
+      },
+    },
+    { new: true }
+  );
+
+  if (blog) {
+    io.emit("pushUnlike");
+    return res.json({
+      EC: 0,
+      EM: "Thành công",
+      DT: blog,
+    });
+  }
+};
+
+const BlogF = async (req, res) => {
+  const { id, idPost } = req.body;
+  const io = req.app.get("io");
+
+  const blog = await Blog.findOneAndUpdate(
+    { _id: idPost },
+    {
+      $push: {
+        favorites: {
+          userFavorite: id,
+          favoritedAt: Date.now(),
+        },
+      },
+    },
+    { new: true }
+  );
+
+  if (blog) {
+    io.emit("pushF");
+    return res.json({
+      EC: 0,
+      EM: "Thành công",
+      DT: blog,
+    });
+  }
+};
+
+const BlogUnf = async (req, res) => {
+  const { id, idPost } = req.body;
+  const io = req.app.get("io");
+
+  const blog = await Blog.findOneAndUpdate(
+    { _id: idPost },
+    {
+      $pull: {
+        favorites: {
+          userFavorite: id,
+        },
+      },
+    },
+    { new: true }
+  );
+
+  if (blog) {
+    io.emit("pushUnf");
+    return res.json({
+      EC: 0,
+      EM: "Thành công",
+      DT: blog,
+    });
+  }
+};
+
+module.exports = {
+  BlogCreate,
+  MeblogRead,
+  BlogRead,
+  BlogLike,
+  BlogUnlike,
+  BlogF,
+  BlogUnf,
+};

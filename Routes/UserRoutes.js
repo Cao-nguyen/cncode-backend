@@ -53,6 +53,7 @@ const userRoutes = (app) => {
   router.patch("/api/v1/news/client/news/like", News.NewsLikeCreate);
   router.post("/api/v1/news/client/news/unlike", News.NewsUnlikeCreate);
   router.post("/api/v1/client/news/comment/create", Comment.NewsCommentCreate);
+  router.post("/api/v1/client/news/comment/delete", Comment.NewsCommentDelete);
 
   // Đăng ký - Đăng nhập
   router.post("/api/v1/client/xacthuc", Login.Xacthuc);

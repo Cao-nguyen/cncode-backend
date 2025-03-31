@@ -29,13 +29,6 @@ const BlogSchema = new mongoose.Schema(
         userComment: { type: mongoose.Schema.Types.ObjectId, ref: "users" },
         comment: { type: String },
         commentedAt: { type: Date, default: Date.now },
-        likeComment: [
-          {
-            userLike: { type: mongoose.Schema.Types.ObjectId, ref: "users" },
-            type: { type: String },
-            likedAt: { type: Date, default: Date.now },
-          },
-        ],
         parrentId: { type: mongoose.Schema.Types.ObjectId, ref: "blogs" },
       },
     ],

@@ -48,6 +48,7 @@ const userRoutes = (app) => {
   router.post("/api/v1/client/blog/f", Blog.BlogF);
   router.post("/api/v1/client/blog/unf", Blog.BlogUnf);
   router.post("/api/v1/client/blog/comment/create", Comment.BlogCommentCreate);
+  router.post("/api/v1/client/blog/comment/delete", Comment.BlogCommentDelete);
 
   // Profile
   router.get("/api/v1/client/profile/read/:username", Profile.ProfileRead);

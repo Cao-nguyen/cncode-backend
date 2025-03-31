@@ -150,8 +150,52 @@ const BlogCommentCreate = async (req, res) => {
   }
 };
 
+const BlogCommentDelete = async (req, res) => {
+  const { idPost, idPostDelete, parrentId } = req.body;
+  const io = req.app.get("io");
+
+  if (parrentId === null) {
+    const data = await Blog.findOneAndUpdate(
+      { _id: idPost },
+      {
+        $pull: {
+          comments: {
+            $or: [{ _id: idPostDelete }, { parrentId: idPostDelete }],
+          },
+        },
+      }
+    );
+
+    if (data) {
+      io.emit("deleteComment");
+      return res.json({ EM: "Thành công", EC: 0, DT: data });
+    } else {
+      return res.json({ EM: "Thất bại", EC: -1, DT: "" });
+    }
+  } else {
+    const data = await Blog.findOneAndUpdate(
+      { _id: idPost },
+      {
+        $pull: {
+          comments: {
+            _id: idPostDelete,
+          },
+        },
+      }
+    );
+
+    if (data) {
+      io.emit("deleteComment");
+      return res.json({ EM: "Thành công", EC: 0, DT: data });
+    } else {
+      return res.json({ EM: "Thất bại", EC: -1, DT: "" });
+    }
+  }
+};
+
 module.exports = {
   NewsCommentCreate,
   NewsCommentDelete,
   BlogCommentCreate,
+  BlogCommentDelete,
 };

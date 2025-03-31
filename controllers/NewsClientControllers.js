@@ -9,7 +9,6 @@ const NewsRead = async (req, res) => {
     })
       .sort({ createdAt: -1 })
       .populate("authorId", "fullName")
-      .populate("like.userLike", "fullName")
       .populate("comments.userComment", "fullName avatar _id");
 
     news.forEach((post) => {
@@ -51,7 +50,6 @@ const NewsLikeCreate = async (req, res) => {
     if (news) {
       const newData = await News.findOne({ _id: idPost })
         .populate("authorId", "fullName")
-        .populate("like.userLike", "fullName")
         .populate("comments.userComment", "fullName avatar _id");
 
       newData.comments.sort((a, b) => b.commentedAt - a.commentedAt);
@@ -92,7 +90,6 @@ const NewsUnlikeCreate = async (req, res) => {
     if (news) {
       const newData = await News.findOne({ _id: idPost })
         .populate("authorId", "fullName")
-        .populate("like.userLike", "fullName")
         .populate("comments.userComment", "fullName avatar _id");
 
       newData.comments.sort((a, b) => b.commentedAt - a.commentedAt);

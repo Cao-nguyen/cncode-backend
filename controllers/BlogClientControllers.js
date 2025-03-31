@@ -66,7 +66,12 @@ const BlogRead = async (req, res) => {
     isChecked: true,
   })
     .populate("authorId", "fullName avatar info role")
+    .populate("comments.userComment", "fullName avatar _id")
     .sort({ createdAt: -1 });
+
+  rawBlog.forEach((post) => {
+    post.comments.sort((a, b) => b.commentedAt - a.commentedAt);
+  });
 
   if (rawBlog) {
     return res.json({
@@ -100,6 +105,8 @@ const BlogLike = async (req, res) => {
     { new: true }
   );
 
+  blog.comments.sort((a, b) => b.commentedAt - a.commentedAt);
+
   if (blog) {
     io.emit("pushLike");
     return res.json({
@@ -125,6 +132,8 @@ const BlogUnlike = async (req, res) => {
     },
     { new: true }
   );
+
+  blog.comments.sort((a, b) => b.commentedAt - a.commentedAt);
 
   if (blog) {
     io.emit("pushUnlike");
@@ -153,6 +162,8 @@ const BlogF = async (req, res) => {
     { new: true }
   );
 
+  blog.comments.sort((a, b) => b.commentedAt - a.commentedAt);
+
   if (blog) {
     io.emit("pushF");
     return res.json({
@@ -178,6 +189,8 @@ const BlogUnf = async (req, res) => {
     },
     { new: true }
   );
+
+  blog.comments.sort((a, b) => b.commentedAt - a.commentedAt);
 
   if (blog) {
     io.emit("pushUnf");

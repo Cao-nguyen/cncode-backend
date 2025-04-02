@@ -91,7 +91,7 @@ const RegisterUser = async (req, res) => {
       coins: "0",
       ks: whereNow,
       avatar:
-        "https://res.cloudinary.com/dckuqnehz/image/upload/v1740879702/uploads/img/18-01-2025/g354ky1ob557wmdz6sca",
+        "https://res.cloudinary.com/dckuqnehz/image/upload/v1740879702/uploads/img/09-03-2025/tj6bbt7utxblh4q9a3vk",
     });
 
     if (user) {
@@ -100,7 +100,7 @@ const RegisterUser = async (req, res) => {
       return;
     }
 
-    if (data) {
+    if (user) {
       await Code.findOneAndDelete({ email: email });
 
       return res.json({

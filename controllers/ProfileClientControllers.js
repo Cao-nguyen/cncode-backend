@@ -21,10 +21,6 @@ const ProfileRead = async (req, res) => {
     EC: 0,
     DT: {
       user,
-      huyhieu,
-      items,
-      follows,
-      courses,
     },
   });
 };

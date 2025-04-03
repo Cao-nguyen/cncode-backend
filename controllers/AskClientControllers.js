@@ -1,4 +1,3 @@
-const { findOneAndUpdate } = require("../models/AskModel");
 const AskModel = require("../models/AskModel");
 
 const AskReplyCreate = async (req, res) => {
@@ -92,4 +91,26 @@ const AskRead = async (req, res) => {
   }
 };
 
-module.exports = { AskCreate, AskRead, AskReplyCreate };
+const AskDelete = async (req, res) => {
+  const { id } = req.body;
+  const io = req.app.get("io");
+
+  let data = await AskModel.findOneAndDelete({ _id: id });
+
+  if (!data) {
+    data = await AskModel.findOneAndUpdate(
+      { "answer._id": id },
+      { $pull: { answer: { _id: id } } },
+      { new: true }
+    );
+  }
+
+  if (data) {
+    io.emit("deleteAsk");
+    return res.json({ EM: "Xoá thành công!", EC: 0, DT: data });
+  } else {
+    return res.json({ EM: "Xoá thất bại!", EC: -1, DT: null });
+  }
+};
+
+module.exports = { AskCreate, AskRead, AskReplyCreate, AskDelete };

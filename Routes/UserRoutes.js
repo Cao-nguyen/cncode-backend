@@ -8,6 +8,7 @@ const Home = require("../controllers/HomeClientControllers");
 const Ask = require("../controllers/AskClientControllers");
 const Settings = require("../controllers/SettingsClientControllers");
 const Comment = require("../controllers/CommentClientServerControllers");
+const Chat = require("../controllers/ChatClientControllers");
 
 const router = express.Router();
 
@@ -15,6 +16,10 @@ const userRoutes = (app) => {
   // Home
   router.get("/api/v1/client/blogHome/read", Home.BlogRead);
   router.get("/api/v1/client/newsHome/read", Home.NewsRead);
+
+  // Chat with Nguyên
+  router.post("/api/v1/client/chat/create", Chat.ChatCreate);
+  router.get("/api/v1/client/chat/read", Chat.ChatRead);
 
   // Settings
   router.post("/api/v1/client/deletedImg", Settings.UserDeletedImage);

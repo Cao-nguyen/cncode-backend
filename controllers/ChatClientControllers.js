@@ -43,7 +43,32 @@ const ChatRead = async (req, res) => {
   }
 };
 
+const ChatDelete = async (req, res) => {
+  const { id } = req.body;
+  const io = req.app.get("io");
+
+  const data = await Chat.deleteMany({
+    $or: [{ sendId: id }, { receivedId: id }],
+  });
+
+  if (data) {
+    io.emit("win");
+    return res.json({
+      EM: "Thành công!",
+      EC: 0,
+      DT: data,
+    });
+  } else {
+    return res.json({
+      EM: "Thất bại!",
+      EC: -1,
+      DT: "",
+    });
+  }
+};
+
 module.exports = {
   ChatCreate,
   ChatRead,
+  ChatDelete,
 };

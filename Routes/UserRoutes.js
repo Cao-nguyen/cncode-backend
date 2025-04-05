@@ -20,6 +20,7 @@ const userRoutes = (app) => {
   // Chat with Nguyên
   router.post("/api/v1/client/chat/create", Chat.ChatCreate);
   router.get("/api/v1/client/chat/read", Chat.ChatRead);
+  router.post("/api/v1/client/chat/win", Chat.ChatDelete);
 
   // Settings
   router.post("/api/v1/client/deletedImg", Settings.UserDeletedImage);

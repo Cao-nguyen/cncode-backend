@@ -1,12 +1,14 @@
 const Chat = require("../models/ChatModel");
 
 const ChatCreate = async (req, res) => {
-  const { id, chat } = req.body;
+  const { id, receivedId, chat } = req.body;
   const io = req.app.get("io");
+
+  const newReceivedId = receivedId || null;
 
   const data = new Chat({
     sendId: id,
-    receivedId: null,
+    receivedId: newReceivedId,
     chat: chat,
     isRead: false,
   });
@@ -26,7 +28,9 @@ const ChatCreate = async (req, res) => {
 };
 
 const ChatRead = async (req, res) => {
-  const data = await Chat.find().populate("sendId", "fullName");
+  const data = await Chat.find()
+    .populate("sendId", "fullName avatar")
+    .populate("receivedId", "fullName avatar");
 
   if (data) {
     return res.json({

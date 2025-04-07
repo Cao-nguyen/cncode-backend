@@ -65,7 +65,7 @@ const BinsBlogEdit = async (req, res) => {
   try {
     const { id } = req.body;
 
-    await Blog.updateOne({ _id: id }, { deleted: false });
+    await Blog.updateOne({ _id: id }, { deleted: false, active: "" });
 
     return res.json({
       EM: "Đã khôi phục thành công!",

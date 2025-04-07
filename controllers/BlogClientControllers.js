@@ -35,7 +35,7 @@ const BlogCreate = async (req, res) => {
     img: img,
     description: description,
     content: content,
-    active: false,
+    active: "",
     authorId: id,
   });
 
@@ -60,7 +60,7 @@ const BlogCreate = async (req, res) => {
 
 const BlogRead = async (req, res) => {
   const rawBlog = await Blog.find({
-    active: true,
+    active: "chapnhan",
     deleted: false,
     show: true,
     isChecked: true,

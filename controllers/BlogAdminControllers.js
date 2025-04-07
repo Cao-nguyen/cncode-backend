@@ -112,7 +112,10 @@ const BlogEdit = async (req, res) => {
 const BlogDuyet = async (req, res) => {
   const idDuyet = req.body.idDuyet;
 
-  const data = await Blog.findOneAndUpdate({ _id: idDuyet }, { active: true });
+  const data = await Blog.findOneAndUpdate(
+    { _id: idDuyet },
+    { active: "chapnhan" }
+  );
 
   if (data) {
     return res.json({
@@ -132,7 +135,10 @@ const BlogDuyet = async (req, res) => {
 const BlogTuchoi = async (req, res) => {
   const idDuyet = req.body.idDuyet;
 
-  const data = await Blog.findOneAndUpdate({ _id: idDuyet }, { active: false });
+  const data = await Blog.findOneAndUpdate(
+    { _id: idDuyet },
+    { active: "tuchoi", deleted: true }
+  );
 
   if (data) {
     return res.json({

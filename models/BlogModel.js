@@ -41,7 +41,7 @@ const BlogSchema = new mongoose.Schema(
       },
     ],
     authorId: { type: mongoose.Schema.Types.ObjectId, ref: "users" },
-    active: { type: Boolean, default: true },
+    active: { type: String },
     deleted: { type: Boolean, default: false },
     author: {
       type: mongoose.Schema.Types.ObjectId,

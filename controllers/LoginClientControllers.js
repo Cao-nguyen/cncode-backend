@@ -121,21 +121,19 @@ const RegisterUser = async (req, res) => {
 };
 
 const LoginUser = async (req, res) => {
-  const { fullName, username, password } = req.body;
+  const { username, password } = req.body;
 
-  const newFullName = fullName.trim();
   const newUsername = username.trim();
 
-  if (!newFullName || !newUsername || !password) {
+  if (!newUsername || !password) {
     return res.json({
-      EM: "Vui lòng nhập tên, tên đăng nhập và mật khẩu",
+      EM: "Vui lòng nhập tên đăng nhập và mật khẩu",
       EC: -1,
       DT: "",
     });
   }
 
   const user = await User.findOne({
-    fullName: newFullName,
     username: newUsername,
   });
 
@@ -161,7 +159,7 @@ const LoginUser = async (req, res) => {
     EC: 0,
     DT: {
       id: user._id,
-      fullName,
+      fullName: user.fullName,
       username,
       role: user.role,
     },

@@ -30,7 +30,7 @@ const AccessRead = async (req, res) => {
 
         setTimeout(() => {
           activeSessions.delete(userIP);
-        }, 3600000);
+        }, 54000000);
       } else {
         activeSessions.set(userIP, Date.now());
       }

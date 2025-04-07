@@ -42,18 +42,11 @@ const Xacthuc = async (req, res) => {
 
 const RegisterUser = async (req, res) => {
   try {
-    const { fullName, email, username, password, code, whereNow } = req.body;
+    const { fullName, email, username, password, code, whereNow, tinh } =
+      req.body;
 
     const newFullName = fullName.trim();
     const newUsername = username.trim();
-
-    if (!email || !newFullName || !newUsername || !password || !code) {
-      return res.json({
-        EM: "Vui lòng nhập đầy đủ thông tin",
-        EC: -1,
-        DT: "",
-      });
-    }
 
     const isEmail = await User.findOne({ email });
     if (isEmail)
@@ -90,6 +83,7 @@ const RegisterUser = async (req, res) => {
       password: hashedPassword,
       coins: "0",
       ks: whereNow,
+      tinh: tinh,
       avatar:
         "https://res.cloudinary.com/dckuqnehz/image/upload/v1740879702/uploads/img/09-03-2025/tj6bbt7utxblh4q9a3vk",
     });

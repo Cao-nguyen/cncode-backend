@@ -25,6 +25,7 @@ const Users = new Schema(
     coins: { type: Number, default: 100 },
     status: { type: String, default: "active" },
     memberPoints: { type: Number, default: 0 },
+    gift: [{ giftId: { type: mongoose.Schema.Types.ObjectId, ref: "shops" } }],
   },
   {
     timestamps: true,

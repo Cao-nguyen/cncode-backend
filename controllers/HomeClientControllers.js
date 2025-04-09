@@ -4,7 +4,7 @@ const News = require("../models/NewsModel");
 const BlogRead = async (req, res) => {
   const data = await Blog.find({
     deleted: false,
-    active: true,
+    active: "chapnhan",
     show: true,
     isChecked: true,
   })

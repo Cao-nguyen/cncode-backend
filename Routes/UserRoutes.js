@@ -19,6 +19,7 @@ const userRoutes = (app) => {
   // Shop
   router.get(`${link}/shop/read`, Shop.ShopRead);
   router.get(`${link}/shop-user/read/:id`, Shop.ShopUserRead);
+  router.post(`${link}/shop/create`, Shop.ShopCreate);
 
   // Home
   router.get(`${link}/blogHome/read`, Home.BlogRead);

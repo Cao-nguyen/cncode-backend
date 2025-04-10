@@ -39,7 +39,27 @@ const ShopUserRead = async (req, res) => {
   }
 };
 
+const ShopCreate = async (req, res) => {
+  const { buyId, count, tong, userId, userCoins } = req.body;
+  const io = req.app.get("io");
+
+  const money = userCoins - tong;
+
+  const data = await User.findOneAndUpdate(
+    { _id: userId },
+    { $push: { gift: { $each: Array(count).fill({ buyId }) } }, coins: money }
+  );
+
+  if (data) {
+    io.emit("buyPush");
+    return res.json({ EM: "Đã mua thành công!", EC: 0, DT: data });
+  } else {
+    return res.json({ EM: "Quá trình thanh toán thất bại", EC: -1, DT: "" });
+  }
+};
+
 module.exports = {
   ShopRead,
   ShopUserRead,
+  ShopCreate,
 };

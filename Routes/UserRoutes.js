@@ -10,11 +10,14 @@ const Settings = require("../controllers/SettingsClientControllers");
 const Comment = require("../controllers/CommentClientServerControllers");
 const Chat = require("../controllers/ChatClientControllers");
 const Shop = require("../controllers/ShopClientControllers");
+const Forum = require("../controllers/ForumClientControllers");
 
 const router = express.Router();
 
 const userRoutes = (app) => {
   const link = "/api/v1/client";
+  // Diễn đàn
+  router.get(`${link}/forum/read`, Forum.ForumRead);
 
   // Shop
   router.get(`${link}/shop/read`, Shop.ShopRead);

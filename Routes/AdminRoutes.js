@@ -21,6 +21,7 @@ const adminRoutes = (app) => {
   router.post(`${link}/forum/edit`, Forum.ForumEdit);
   router.post(`${link}/forum/delete`, Forum.ForumDelete);
   router.get(`${link}/forum/read`, Forum.ForumRead);
+  router.post(`${link}/forum/upload`, Forum.ForumUpload);
 
   // Admin - Shop
   router.post(`${link}/shop/create`, Shop.ShopCreate);

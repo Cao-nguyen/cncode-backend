@@ -68,4 +68,24 @@ const ForumDelete = async (req, res) => {
   }
 };
 
-module.exports = { ForumCreate, ForumRead, ForumEdit, ForumDelete };
+const ForumUpload = async (req, res) => {
+  const { id, avatar } = req.body;
+  const io = req.app.get("io");
+
+  const data = await Forum.findOneAndUpdate({ _id: id }, { avatar: avatar });
+
+  if (data) {
+    io.emit("pushForum");
+    return res.json({ EM: "Cập nhật diễn đàn thành công!", EC: 0, DT: data });
+  } else {
+    return res.json({ EM: "Cập nhật diễn đàn thất bại!", EC: -1, DT: "" });
+  }
+};
+
+module.exports = {
+  ForumCreate,
+  ForumRead,
+  ForumEdit,
+  ForumDelete,
+  ForumUpload,
+};

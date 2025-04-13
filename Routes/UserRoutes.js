@@ -18,6 +18,9 @@ const userRoutes = (app) => {
   const link = "/api/v1/client";
   // Diễn đàn
   router.get(`${link}/forum/read`, Forum.ForumRead);
+  router.post(`${link}/forum/join`, Forum.ForumJoin);
+  router.post(`${link}/forum/out`, Forum.ForumOut);
+  router.post(`${link}/forum/chat`, Forum.ForumChat);
 
   // Shop
   router.get(`${link}/shop/read`, Shop.ShopRead);

@@ -8,14 +8,31 @@ const ForumSchema = new mongoose.Schema({
   allow_chat: { type: Boolean },
   allow_vote: { type: Boolean },
   member: [
-    { member_id: { type: mongoose.Schema.Types.ObjectId, ref: "users" } },
+    {
+      _id: false,
+      member_id: { type: mongoose.Schema.Types.ObjectId, ref: "users" },
+    },
   ],
   chat: [
     {
-      chat_name: { type: mongoose.Schema.Types.ObjectId, ref: "users" },
-      chat_reply: { type: mongoose.Schema.Types.ObjectId, ref: "users" },
+      chat_id: { type: mongoose.Schema.Types.ObjectId, ref: "users" },
+      chat_reply: [
+        {
+          chat_reply_id: { type: mongoose.Schema.Types.ObjectId, ref: "users" },
+          chat_reply_content: { type: String },
+        },
+      ],
+      chat_like: [
+        {
+          like: { type: mongoose.Schema.Types.ObjectId, ref: "users" },
+        },
+      ],
       chat_content: { type: String },
-      chat_time: { type: Date, default: Date.now() },
+      chat_time: {
+        type: Date,
+        default: Date.now(),
+        index: { expires: 60 * 60 * 24 * 15 },
+      },
     },
   ],
   forum_time: { type: Date, default: Date.now() },

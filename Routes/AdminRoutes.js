@@ -9,11 +9,18 @@ const Member = require("../controllers/MemberAdminControllers");
 const Web = require("../controllers/WebAdminControllers");
 const Blog = require("../controllers/BlogAdminControllers");
 const Shop = require("../controllers/ShopAdminControllers");
+const Forum = require("../controllers/ForumAdminControllers");
 
 const router = express.Router();
 
 const adminRoutes = (app) => {
   const link = "/api/v1/admin";
+
+  // Admin - Diễn đàn
+  router.post(`${link}/forum/create`, Forum.ForumCreate);
+  router.post(`${link}/forum/edit`, Forum.ForumEdit);
+  router.post(`${link}/forum/delete`, Forum.ForumDelete);
+  router.get(`${link}/forum/read`, Forum.ForumRead);
 
   // Admin - Shop
   router.post(`${link}/shop/create`, Shop.ShopCreate);

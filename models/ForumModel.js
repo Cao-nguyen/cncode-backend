@@ -3,6 +3,10 @@ const mongoose = require("mongoose");
 const ForumSchema = new mongoose.Schema({
   name: { type: String },
   description: { type: String },
+  avatar: { type: String },
+  forum_law: { type: String },
+  allow_chat: { type: Boolean },
+  allow_vote: { type: Boolean },
   member: [
     { member_id: { type: mongoose.Schema.Types.ObjectId, ref: "users" } },
   ],

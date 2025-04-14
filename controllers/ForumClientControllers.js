@@ -1,15 +1,11 @@
 const Forum = require("../models/ForumModel");
+const mongoose = require("mongoose");
 
 const ForumRead = async (req, res) => {
-  const forum = await Forum.find()
-    .populate({
-      path: "chat.chat_id",
-      select: "avatar fullName",
-    })
-    .populate({
-      path: "chat.chat_reply.chat_reply_id",
-      select: "avatar fullName",
-    });
+  const forum = await Forum.find().populate({
+    path: "chat.chat_id",
+    select: "avatar fullName",
+  });
 
   if (forum) {
     return res.json({ EM: "Thành công!", EC: 0, DT: forum });
@@ -63,7 +59,7 @@ const ForumOut = async (req, res) => {
 };
 
 const ForumChat = async (req, res) => {
-  const { tab, userId, reply, replyContent, chat } = req.body;
+  const { tab, userId, chat } = req.body;
   const io = req.app.get("io");
 
   const data = await Forum.findOneAndUpdate(
@@ -72,10 +68,6 @@ const ForumChat = async (req, res) => {
       $push: {
         chat: {
           chat_id: userId,
-          chat_reply: {
-            chat_reply_id: !reply ? null : reply,
-            chat_reply_content: !replyContent ? null : replyContent,
-          },
           chat_content: chat,
           chat_time: Date.now(),
         },
@@ -91,4 +83,59 @@ const ForumChat = async (req, res) => {
   }
 };
 
-module.exports = { ForumRead, ForumJoin, ForumChat, ForumOut };
+const ForumPushLove = async (req, res) => {
+  const { tab, idChat, userId } = req.body;
+  const io = req.app.get("io");
+
+  const data = await Forum.findOneAndUpdate(
+    {
+      _id: tab,
+      "chat._id": idChat,
+    },
+    {
+      $addToSet: {
+        "chat.$.chat_like": { like: userId },
+      },
+    }
+  );
+
+  if (data) {
+    io.emit("pushLove");
+    return res.json({ EM: "Thành công!", EC: 0, DT: data });
+  } else {
+    return res.json({ EM: "Thất bại!", EC: -1, DT: "" });
+  }
+};
+
+const ForumPullLove = async (req, res) => {
+  const { tab, idChat, userId } = req.body;
+  const io = req.app.get("io");
+
+  const data = await Forum.findOneAndUpdate(
+    {
+      _id: tab,
+      "chat._id": idChat,
+    },
+    {
+      $pull: {
+        "chat.$.chat_like": { like: userId },
+      },
+    }
+  );
+
+  if (data) {
+    io.emit("pullLove");
+    return res.json({ EM: "Thành công!", EC: 0, DT: data });
+  } else {
+    return res.json({ EM: "Thất bại!", EC: -1, DT: "" });
+  }
+};
+
+module.exports = {
+  ForumRead,
+  ForumJoin,
+  ForumChat,
+  ForumOut,
+  ForumPushLove,
+  ForumPullLove,
+};

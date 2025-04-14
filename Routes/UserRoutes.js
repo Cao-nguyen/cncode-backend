@@ -21,6 +21,8 @@ const userRoutes = (app) => {
   router.post(`${link}/forum/join`, Forum.ForumJoin);
   router.post(`${link}/forum/out`, Forum.ForumOut);
   router.post(`${link}/forum/chat`, Forum.ForumChat);
+  router.post(`${link}/forum/pushlove`, Forum.ForumPushLove);
+  router.post(`${link}/forum/pulllove`, Forum.ForumPullLove);
 
   // Shop
   router.get(`${link}/shop/read`, Shop.ShopRead);

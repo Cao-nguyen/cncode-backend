@@ -16,12 +16,6 @@ const ForumSchema = new mongoose.Schema({
   chat: [
     {
       chat_id: { type: mongoose.Schema.Types.ObjectId, ref: "users" },
-      chat_reply: [
-        {
-          chat_reply_id: { type: mongoose.Schema.Types.ObjectId, ref: "users" },
-          chat_reply_content: { type: String },
-        },
-      ],
       chat_like: [
         {
           like: { type: mongoose.Schema.Types.ObjectId, ref: "users" },

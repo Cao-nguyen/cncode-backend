@@ -10,11 +10,15 @@ const Web = require("../controllers/WebAdminControllers");
 const Blog = require("../controllers/BlogAdminControllers");
 const Shop = require("../controllers/ShopAdminControllers");
 const Forum = require("../controllers/ForumAdminControllers");
+const Settings = require("../controllers/SettingsAdminControllers");
 
 const router = express.Router();
 
 const adminRoutes = (app) => {
   const link = "/api/v1/admin";
+
+  // Admin - Settings
+  router.post(`${link}/settings/upload`, Settings.SettingsUpload);
 
   // Admin - Diễn đàn
   router.post(`${link}/forum/create`, Forum.ForumCreate);

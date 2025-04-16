@@ -32,6 +32,8 @@ const userRoutes = (app) => {
   // Home
   router.get(`${link}/blogHome/read`, Home.BlogRead);
   router.get(`${link}/newsHome/read`, Home.NewsRead);
+  router.post(`${link}/grateHome/create`, Home.GrateCreate);
+  router.get(`${link}/grateHome/read`, Home.GrateRead);
 
   // Chat with Nguyên
   router.post(`${link}/chat/create`, Chat.ChatCreate);

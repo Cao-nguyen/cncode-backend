@@ -20,6 +20,7 @@ const adminRoutes = (app) => {
   // Admin - Settings
   router.post(`${link}/settings/banner/upload`, Settings.SettingsBannerUpload);
   router.get(`${link}/settings/banner/read`, Settings.SettingsBannerRead);
+  router.post(`${link}/settings/banner/delete`, Settings.SettingsBannerDelete);
 
   // Admin - Diễn đàn
   router.post(`${link}/forum/create`, Forum.ForumCreate);

@@ -18,7 +18,8 @@ const adminRoutes = (app) => {
   const link = "/api/v1/admin";
 
   // Admin - Settings
-  router.post(`${link}/settings/upload`, Settings.SettingsUpload);
+  router.post(`${link}/settings/banner/upload`, Settings.SettingsBannerUpload);
+  router.get(`${link}/settings/banner/read`, Settings.SettingsBannerRead);
 
   // Admin - Diễn đàn
   router.post(`${link}/forum/create`, Forum.ForumCreate);

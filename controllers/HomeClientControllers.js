@@ -96,9 +96,34 @@ const GrateRead = async (req, res) => {
   }
 };
 
+const GrateDelete = async (req, res) => {
+  const { id } = req.body;
+  const io = req.app.get("io");
+
+  const data = await Grate.findOneAndDelete({
+    _id: id,
+  });
+
+  if (data) {
+    io.emit("pushGrate");
+    return res.json({
+      EM: "Đã xoá đánh giá thành công!",
+      EC: 0,
+      DT: data,
+    });
+  } else {
+    return res.json({
+      EM: "Đã xoá đánh giá thất bại!",
+      EC: 0,
+      DT: "",
+    });
+  }
+};
+
 module.exports = {
   BlogRead,
   NewsRead,
   GrateCreate,
   GrateRead,
+  GrateDelete,
 };

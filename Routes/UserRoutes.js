@@ -33,6 +33,7 @@ const userRoutes = (app) => {
   router.get(`${link}/blogHome/read`, Home.BlogRead);
   router.get(`${link}/newsHome/read`, Home.NewsRead);
   router.post(`${link}/grateHome/create`, Home.GrateCreate);
+  router.post(`${link}/grateHome/delete`, Home.GrateDelete);
   router.get(`${link}/grateHome/read`, Home.GrateRead);
 
   // Chat with Nguyên

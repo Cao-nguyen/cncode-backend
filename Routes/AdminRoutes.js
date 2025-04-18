@@ -11,11 +11,16 @@ const Blog = require("../controllers/BlogAdminControllers");
 const Shop = require("../controllers/ShopAdminControllers");
 const Forum = require("../controllers/ForumAdminControllers");
 const Settings = require("../controllers/SettingsAdminControllers");
+const Contest = require("../controllers/ContestAdminControllers");
 
 const router = express.Router();
 
 const adminRoutes = (app) => {
   const link = "/api/v1/admin";
+
+  // Admin - Luyện tập
+  router.post(`${link}/contest/create`, Contest.ContestCreate);
+  router.get(`${link}/contest/read`, Contest.ContestRead);
 
   // Admin - Settings
   router.post(`${link}/settings/banner/upload`, Settings.SettingsBannerUpload);

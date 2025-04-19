@@ -105,6 +105,8 @@ const RegisterUser = async (req, res) => {
           username: user.username,
           role: user.role,
           id: user._id,
+          coins: user.coins,
+          streak: user.streak,
         },
       });
     }
@@ -152,10 +154,12 @@ const LoginUser = async (req, res) => {
     EM: "Đăng nhập thành công",
     EC: 0,
     DT: {
-      id: user._id,
       fullName: user.fullName,
-      username,
+      username: user.username,
       role: user.role,
+      id: user._id,
+      coins: user.coins,
+      streak: user.streak,
     },
   });
 };

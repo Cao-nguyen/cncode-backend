@@ -23,6 +23,7 @@ const Users = new Schema(
     tinh: { type: String, default: "" },
     school: { type: String, default: "" },
     coins: { type: Number, default: 100 },
+    streak: { type: Number, default: 1 },
     status: { type: String, default: "active" },
     memberPoints: { type: Number, default: 0 },
     gift: [{ giftId: { type: mongoose.Schema.Types.ObjectId, ref: "shops" } }],

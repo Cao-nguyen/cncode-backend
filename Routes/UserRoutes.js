@@ -35,6 +35,8 @@ const userRoutes = (app) => {
   router.post(`${link}/grateHome/create`, Home.GrateCreate);
   router.post(`${link}/grateHome/delete`, Home.GrateDelete);
   router.get(`${link}/grateHome/read`, Home.GrateRead);
+  router.post(`${link}/user-point/create`, Home.UserPointCreate);
+  router.get(`${link}/user-point/read`, Home.UserPointRead);
 
   // Chat with Nguyên
   router.post(`${link}/chat/create`, Chat.ChatCreate);

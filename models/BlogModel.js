@@ -10,6 +10,7 @@ const BlogSchema = new mongoose.Schema(
     img: { type: String },
     description: { type: String },
     content: { type: String },
+    eye_watch: { type: Number },
     like: [
       {
         _id: false,

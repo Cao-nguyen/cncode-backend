@@ -11,11 +11,16 @@ const Comment = require("../controllers/CommentClientServerControllers");
 const Chat = require("../controllers/ChatClientControllers");
 const Shop = require("../controllers/ShopClientControllers");
 const Forum = require("../controllers/ForumClientControllers");
+const Eye = require("../controllers/EyeClientControllers");
 
 const router = express.Router();
 
 const userRoutes = (app) => {
   const link = "/api/v1/client";
+  // Mắt xem
+  router.post(`${link}/eye/blog/create`, Eye.EyeBlogCreate);
+  router.post(`${link}/eye/new/create`, Eye.EyeNewCreate);
+
   // Diễn đàn
   router.get(`${link}/forum/read`, Forum.ForumRead);
   router.post(`${link}/forum/join`, Forum.ForumJoin);

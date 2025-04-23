@@ -81,7 +81,7 @@ const RegisterUser = async (req, res) => {
       fullName: newFullName,
       username: newUsername,
       password: hashedPassword,
-      coins: "0",
+      coins: "1000",
       ks: whereNow,
       tinh: tinh,
       avatar:

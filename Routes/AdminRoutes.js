@@ -12,11 +12,16 @@ const Shop = require("../controllers/ShopAdminControllers");
 const Forum = require("../controllers/ForumAdminControllers");
 const Settings = require("../controllers/SettingsAdminControllers");
 const Contest = require("../controllers/ContestAdminControllers");
+const User = require("../controllers/UserAdminControllers");
+const Course = require("../controllers/CourseAdminControllers");
 
 const router = express.Router();
 
 const adminRoutes = (app) => {
   const link = "/api/v1/admin";
+
+  // Tài khoản
+  router.get(`${link}/user/read`, User.UserRead);
 
   // Admin - Luyện tập
   router.post(`${link}/contest/create`, Contest.ContestCreate);

@@ -20,6 +20,10 @@ const router = express.Router();
 const adminRoutes = (app) => {
   const link = "/api/v1/admin";
 
+  // Khoá học
+  router.post(`${link}/course/create`, Course.CourseCreate);
+  router.get(`${link}/course/read`, Course.CourseRead);
+
   // Tài khoản
   router.get(`${link}/user/read`, User.UserRead);
 

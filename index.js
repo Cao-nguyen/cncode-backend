@@ -6,6 +6,7 @@ const userRoutes = require("./Routes/UserRoutes");
 const adminRoutes = require("./Routes/AdminRoutes");
 const http = require("http");
 const socketIo = require("socket.io");
+const startResetStreakJob = require("./jobs/StreakCheck");
 
 const app = express();
 
@@ -13,6 +14,8 @@ const port = process.env.PORT || 8080;
 
 // Kết nối database (mongoDB)
 db.connect();
+
+startResetStreakJob();
 
 app.use(cors({}));
 

@@ -5,7 +5,7 @@ const CodeSchema = new mongoose.Schema({
   code: { type: String },
   expiresAt: {
     type: Date,
-    default: Date.now(),
+    default: Date.now,
     expires: 600,
   },
 });

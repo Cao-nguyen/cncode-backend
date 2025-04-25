@@ -3,6 +3,7 @@ const News = require("../models/NewsModel");
 const Grate = require("../models/GrateModel");
 const Coins = require("../models/CoinsModel");
 const User = require("../models/UserModel");
+const Thongbao = require("../models/thongbaoModel");
 
 const BlogRead = async (req, res) => {
   const data = await Blog.find({
@@ -188,6 +189,18 @@ const UserPointRead = async (req, res) => {
   }
 };
 
+const ThongBaoHome = async (req, res) => {
+  const data = await Thongbao.find()
+    .populate("user_one", "avatar fullName")
+    .populate("user_two", "fullName");
+
+  if (data) {
+    return res.json({ EM: "Thành công!", EC: 0, DT: data });
+  } else {
+    return res.json({ EM: "Thất bại!", EC: -1, DT: "" });
+  }
+};
+
 module.exports = {
   BlogRead,
   NewsRead,
@@ -196,4 +209,5 @@ module.exports = {
   GrateDelete,
   UserPointCreate,
   UserPointRead,
+  ThongBaoHome,
 };

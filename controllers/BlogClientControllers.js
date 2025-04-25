@@ -1,4 +1,5 @@
 const Blog = require("../models/BlogModel");
+const Thongbao = require("../models/thongbaoModel");
 
 const MeblogRead = async (req, res) => {
   const { id } = req.params;
@@ -104,6 +105,16 @@ const BlogLike = async (req, res) => {
     },
     { new: true }
   );
+
+  const newBlog = await Blog.findOne({ _id: idPost });
+  const tb = new Thongbao({
+    user_one: id,
+    user_two: newBlog.authorId,
+    content: "đã thả tim blog",
+    others: newBlog.title,
+  });
+
+  await tb.save();
 
   blog.comments.sort((a, b) => b.commentedAt - a.commentedAt);
 

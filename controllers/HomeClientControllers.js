@@ -143,7 +143,7 @@ const UserPointCreate = async (req, res) => {
     newCoins = 1000;
     newStreak = 1;
   } else {
-    newCoins = Math.floor(Math.random() * 16);
+    newCoins = Math.floor(Math.random() * 11) + 5;
     newStreak = user.streak + 1;
   }
 

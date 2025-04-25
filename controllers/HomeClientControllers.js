@@ -126,25 +126,38 @@ const UserPointCreate = async (req, res) => {
   const { id } = req.body;
   const io = req.app.get("io");
 
-  const newCoins = Math.floor(Math.random() * 21);
+  const user = await User.findById(id);
+  if (!user) {
+    return res.status(404).json({
+      EM: "Không tìm thấy người dùng.",
+      EC: 1,
+      DT: null,
+    });
+  }
 
-  const user = await User.findOneAndUpdate(
-    { _id: id },
-    {
-      $inc: { coins: newCoins, streak: 1 },
-    }
-  );
+  let newCoins = 0;
+  let newStreak = 1;
+
+  if (user.streak === 360) {
+    newCoins = 1000;
+    newStreak = 1;
+  } else {
+    newCoins = Math.floor(Math.random() * 16);
+    newStreak = user.streak + 1;
+  }
+
+  user.coins += newCoins;
+  user.streak = newStreak;
+  await user.save();
 
   const data = new Coins({
     authorId: id,
     coins: newCoins,
     createdAt: Date.now(),
   });
+  await data.save();
 
-  if (user) {
-    await data.save();
-    io.emit("pushUserPoint");
-  }
+  io.emit("pushUserPoint");
 
   return res.json({
     EM: "Thành công!",

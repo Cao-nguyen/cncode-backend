@@ -15,6 +15,10 @@ const startResetStreakJob = () => {
           console.log(`🔄 Đã reset streak cho user: ${user._id}`);
         }
       }
+
+      await Coin.deleteMany({});
+      console.log("🗑️ Đã xóa toàn bộ dữ liệu trong Coin.");
+
       console.log("✅ Đã hoàn tất kiểm tra.");
     } catch (err) {
       console.error("❌ Lỗi khi chạy cron job:", err);

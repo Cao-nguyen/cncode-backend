@@ -4,7 +4,7 @@ const Coin = require("../models/CoinsModel");
 
 const startResetStreakJob = () => {
   cron.schedule(
-    "0 7 * * *",
+    "0 0 * * *",
     async () => {
       console.log("🔍 Đang kiểm tra người dùng không có coin...");
 

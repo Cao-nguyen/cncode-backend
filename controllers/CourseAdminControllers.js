@@ -49,7 +49,49 @@ const CourseRead = async (req, res) => {
   }
 };
 
+const DmCreate = async (req, res) => {
+  const { dd, name } = req.body;
+
+  const course = await Course.findById(dd);
+
+  const currentLength = course.categories.length;
+
+  const data = await Course.findOneAndUpdate(
+    { _id: dd },
+    { $push: { categories: { title: name, order: currentLength + 1 } } },
+    { new: true }
+  );
+
+  if (data) {
+    return res.json({ EM: "Thành công!", EC: 0, DT: data });
+  } else {
+    return res.json({ EM: "Thất bại!", EC: -1, DT: "" });
+  }
+};
+
+const LsCreate = async (req, res) => {
+  const { dd, name } = req.body;
+
+  const course = await Course.findById(dd);
+
+  const currentLength = course.categories.length;
+
+  const data = await Course.findOneAndUpdate(
+    { _id: dd },
+    { $push: { categories: { title: name, order: currentLength + 1 } } },
+    { new: true }
+  );
+
+  if (data) {
+    return res.json({ EM: "Thành công!", EC: 0, DT: data });
+  } else {
+    return res.json({ EM: "Thất bại!", EC: -1, DT: "" });
+  }
+};
+
 module.exports = {
   CourseCreate,
   CourseRead,
+  DmCreate,
+  LsCreate,
 };

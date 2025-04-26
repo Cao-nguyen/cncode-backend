@@ -50,6 +50,7 @@ const CourseSchema = new mongoose.Schema(
     is_show: { type: String },
     categories: [CategorySchema],
     authorId: { type: mongoose.Schema.Types.ObjectId, ref: "users" },
+    students_join: [{ type: mongoose.Schema.Types.ObjectId, ref: "users" }],
   },
   { timestamps: true }
 );

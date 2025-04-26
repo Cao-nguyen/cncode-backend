@@ -23,6 +23,8 @@ const adminRoutes = (app) => {
   // Khoá học
   router.post(`${link}/course/create`, Course.CourseCreate);
   router.get(`${link}/course/read`, Course.CourseRead);
+  router.post(`${link}/dm/create`, Course.DmCreate);
+  router.post(`${link}/ls/create`, Course.LsCreate);
 
   // Tài khoản
   router.get(`${link}/user/read`, User.UserRead);

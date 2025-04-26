@@ -48,7 +48,10 @@ const ShopCreate = async (req, res) => {
 
   const data = await User.findOneAndUpdate(
     { _id: userId },
-    { $push: { gift: { $each: Array(count).fill({ buyId }) } }, coins: money }
+    {
+      $push: { gift: { $each: Array(count).fill({ giftId: buyId }) } },
+      coins: money,
+    }
   );
 
   if (data) {

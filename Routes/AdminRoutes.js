@@ -25,6 +25,7 @@ const adminRoutes = (app) => {
   router.get(`${link}/course/read`, Course.CourseRead);
   router.post(`${link}/dm/create`, Course.DmCreate);
   router.post(`${link}/ls/create`, Course.LsCreate);
+  router.post(`${link}/video/create`, Course.VideoCreate);
 
   // Tài khoản
   router.get(`${link}/user/read`, User.UserRead);

@@ -51,6 +51,7 @@ const CourseRead = async (req, res) => {
 
 const DmCreate = async (req, res) => {
   const { dd, name } = req.body;
+  const io = req.app.get("io");
 
   const course = await Course.findById(dd);
 
@@ -63,6 +64,7 @@ const DmCreate = async (req, res) => {
   );
 
   if (data) {
+    io.emit("pushDm");
     return res.json({ EM: "Thành công!", EC: 0, DT: data });
   } else {
     return res.json({ EM: "Thất bại!", EC: -1, DT: "" });
@@ -70,23 +72,61 @@ const DmCreate = async (req, res) => {
 };
 
 const LsCreate = async (req, res) => {
-  const { dd, name } = req.body;
+  const { dd, ct, name } = req.body;
+  const io = req.app.get("io");
 
   const course = await Course.findById(dd);
 
-  const currentLength = course.categories.length;
+  if (!course) {
+    return res.json({ EM: "Không tìm thấy khoá học!", EC: -1, DT: "" });
+  }
 
-  const data = await Course.findOneAndUpdate(
-    { _id: dd },
-    { $push: { categories: { title: name, order: currentLength + 1 } } },
+  let totalLessons = 0;
+  course.categories.forEach((category) => {
+    if (Array.isArray(category.lessons)) {
+      totalLessons += category.lessons.length;
+    }
+  });
+
+  const categoryPath = course.categories.find((c) => c._id.toString() === ct);
+
+  if (!categoryPath) {
+    return res.json({ EM: "Không tìm thấy danh mục!", EC: -1, DT: "" });
+  }
+
+  const updatedCourse = await Course.findOneAndUpdate(
+    { _id: dd, "categories._id": ct },
+    {
+      $push: {
+        "categories.$.lessons": {
+          title: name,
+          order: totalLessons + 1,
+        },
+      },
+    },
     { new: true }
   );
 
-  if (data) {
-    return res.json({ EM: "Thành công!", EC: 0, DT: data });
+  if (updatedCourse) {
+    io.emit("pushLs");
+    return res.json({ EM: "Thành công!", EC: 0, DT: updatedCourse });
   } else {
-    return res.json({ EM: "Thất bại!", EC: -1, DT: "" });
+    return res.json({ EM: "Thất bại khi lưu!", EC: -1, DT: "" });
   }
+};
+
+const VideoCreate = async (req, res) => {
+  const { dd, ct, idLs, video, quizzes } = req.body;
+  const io = req.app.get("io");
+
+  console.log(ct);
+
+  const course = await Course.findById(dd);
+  const category = course.categories.find((c) => c?._id.toString() === ct);
+
+  console.log(category);
+
+  return res.json({ EM: "Thành công!", EC: 0, DT: "" });
 };
 
 module.exports = {
@@ -94,4 +134,5 @@ module.exports = {
   CourseRead,
   DmCreate,
   LsCreate,
+  VideoCreate,
 };

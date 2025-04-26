@@ -10,21 +10,17 @@ const LessonSchema = new mongoose.Schema({
   video_url: { type: String },
   questions: [
     {
-      type: { type: String },
       time_show: { type: String },
       question: { type: String },
       option: [{ answer: { type: String }, checked: { type: Boolean } }],
-      answer: { type: String },
     },
   ],
   order: { type: Number },
   document_url: { type: String },
   quiz: [
     {
-      type: { type: String },
       question: { type: String },
       option: [{ answer: { type: String }, checked: { type: Boolean } }],
-      answer: { type: String },
     },
   ],
 });

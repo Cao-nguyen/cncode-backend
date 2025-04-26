@@ -50,7 +50,44 @@ const PostRead = async (req, res) => {
   }
 };
 
+const ChangeEdit = async (req, res) => {
+  const { userId, id, count, money } = req.body;
+  const io = req.app.get("io");
+
+  const user = await User.findById(userId);
+
+  let removed = 0;
+  user.gift = user.gift.filter((item) => {
+    if (item?.giftId?._id?.toString() === id && removed < count) {
+      removed++;
+      return false;
+    }
+    return true;
+  });
+
+  const bonus = Math.floor(money * 0.9);
+  user.coins = (user.coins || 0) + bonus;
+
+  const data = await user.save();
+
+  if (data) {
+    io.emit("changeItem");
+    return res.json({
+      EM: "Đã đổi vật phẩm thành công!",
+      EC: 0,
+      DT: data,
+    });
+  } else {
+    return res.json({
+      EM: "Đã đổi vật phẩm thất bại!",
+      EC: -1,
+      DT: "",
+    });
+  }
+};
+
 module.exports = {
   ProfileRead,
   PostRead,
+  ChangeEdit,
 };

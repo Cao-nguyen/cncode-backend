@@ -87,6 +87,7 @@ const userRoutes = (app) => {
   // Profile
   router.get(`${link}/profile/read/:username`, Profile.ProfileRead);
   router.get(`${link}/post/read/:username`, Profile.PostRead);
+  router.post(`${link}/change/edit`, Profile.ChangeEdit);
 
   // Tin tức
   router.get(`/api/v1/news/client/read`, News.NewsRead);

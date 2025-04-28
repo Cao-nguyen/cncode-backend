@@ -1,6 +1,5 @@
 const Shop = require("../models/ShopModel");
 const User = require("../models/UserModel");
-const Trans = require("../models/TransactionModel");
 
 const ShopRead = async (req, res) => {
   const data = await Shop.find();
@@ -56,26 +55,6 @@ const ShopCreate = async (req, res) => {
 
   if (data) {
     io.emit("buyPush");
-
-    const item = await Shop.findOne({ _id: buyId });
-    const user = await User.findOne({ _id: userId });
-
-    const trans = new Trans({
-      userId: user._id,
-      content: `Mua ${count} vật phẩm ${item.name} từ bách hoá vật phẩm`,
-      money: tong,
-      apply: `Không giảm giá`,
-      user1: user.fullName,
-      user2: "Lý Cao Nguyên",
-      active: "Đã thanh toán",
-      time1: Date.now(),
-      time2: Date.now(),
-      note: "",
-      type: "2",
-    });
-
-    await trans.save();
-
     return res.json({ EM: "Đã mua thành công!", EC: 0, DT: data });
   } else {
     return res.json({ EM: "Quá trình thanh toán thất bại", EC: -1, DT: "" });

@@ -91,14 +91,22 @@ const UserEditUsername = async (req, res) => {
   } else {
     const data = await User.findOneAndUpdate(
       { _id: id },
-      { username: username }
+      { username: username },
+      { new: true }
     );
 
     if (data) {
       return res.json({
         EM: "Cập nhật thành công!",
         EC: 0,
-        DT: data,
+        DT: {
+          fullName: data.fullName,
+          username: data.username,
+          role: data.role,
+          id: data._id,
+          coins: data.coins,
+          streak: data.streak,
+        },
       });
     } else {
       return res.json({

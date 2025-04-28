@@ -1,5 +1,6 @@
 const Blog = require("../models/BlogModel");
 const Thongbao = require("../models/thongbaoModel");
+const User = require("../models/UserModel");
 
 const MeblogRead = async (req, res) => {
   const { id } = req.params;
@@ -213,6 +214,20 @@ const BlogUnf = async (req, res) => {
   }
 };
 
+const UserBlogRead = async (req, res) => {
+  const id = req.params.id;
+
+  const user = await User.findById(id)
+    .select("_id gift")
+    .populate({ path: "gift.giftId", select: "name img" });
+
+  if (user) {
+    return res.json({ EM: "Thành công!", EC: 0, DT: user });
+  } else {
+    return res.json({ EM: "Thất bại!", EC: -1, DT: "" });
+  }
+};
+
 module.exports = {
   BlogCreate,
   MeblogRead,
@@ -221,4 +236,5 @@ module.exports = {
   BlogUnlike,
   BlogF,
   BlogUnf,
+  UserBlogRead,
 };

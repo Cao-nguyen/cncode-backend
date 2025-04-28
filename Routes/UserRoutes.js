@@ -76,6 +76,7 @@ const userRoutes = (app) => {
   // Blog
   router.post(`${link}/blog/create`, Blog.BlogCreate);
   router.get(`${link}/blog/read`, Blog.BlogRead);
+  router.get(`${link}/userblog/read/:id`, Blog.UserBlogRead);
   router.get(`${link}/meblog/read/:id`, Blog.MeblogRead);
   router.post(`${link}/blog/like`, Blog.BlogLike);
   router.post(`${link}/blog/unlike`, Blog.BlogUnlike);

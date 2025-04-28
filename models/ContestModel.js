@@ -26,7 +26,7 @@ const Excirses = new mongoose.Schema({
     inputDescription: { type: String },
     outputDescription: { type: String },
     codeDefault: { type: String },
-    validateBy: { type: String, enum: ["output", "html"], default: "output" },
+    validateBy: { type: String },
     testCases: [TestCaseSchema],
   },
   point: { type: String },

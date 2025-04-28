@@ -36,7 +36,7 @@ const BlogSchema = new mongoose.Schema(
     gift: [
       {
         userGift: { type: mongoose.Schema.Types.ObjectId, ref: "users" },
-        type: { type: String },
+        giftId: { type: mongoose.Schema.Types.ObjectId, ref: "shops" },
         giftedAt: { type: Date, default: Date.now },
         notes: { type: String },
       },
